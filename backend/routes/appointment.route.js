@@ -4,7 +4,9 @@ const appointmentController = require('../controller/appointment.controller');
 
 // CRUD Operations
 appointmentRouter.post('/', appointmentController.createAppointment);
+appointmentRouter.get('/fetchAllAppointment', appointmentController.getAllAppointments);
 appointmentRouter.get('/:id', appointmentController.getAppointment);
+
 
 // Payment related routes
 appointmentRouter.patch('/:id/payment', appointmentController.updatePayment);
@@ -24,6 +26,7 @@ appointmentRouter.get('/shop/:shopId', appointmentController.getShopAppointments
 
 // Statistics and reports
 appointmentRouter.get('/stats/all', appointmentController.getStatistics);
+
 
 // Query and filter routes
 appointmentRouter.get('/query', appointmentController.queryAppointments);

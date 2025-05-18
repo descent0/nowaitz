@@ -25,6 +25,7 @@ import Overview from "./Overview"
 import CategoryManagement from "./CategoryManagement"
 import { useDispatch, useSelector } from "react-redux"
 import { logoutUser } from "../../store/userSlice"
+import FinancialManagement from "./FinancialManagement"
 
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("Overview")
@@ -36,11 +37,6 @@ const AdminDashboard = () => {
 
   const user= useSelector(state => state.authUser.user);
   
-  const financialData = { 
-    monthlyRevenue: "$87,500", 
-    platformCommission: "15%", 
-    pendingPayouts: "$45,670" 
-  }
 
 
   // Track window resize for better responsiveness
@@ -61,7 +57,7 @@ const AdminDashboard = () => {
     { icon: Users, title: "User Management"},
     { icon: Shield, title: "Category Management" },
     { icon: Users, title: "Shop Management" },
-    { icon: MessageCircle, title: "Dispute Resolution" },
+    { icon: MessageCircle, title: "Complaint Resolution" },
     { icon: DollarSign, title: "Financial Management" },
     { icon: Settings, title: "Settings" },
   ]
@@ -81,19 +77,8 @@ const AdminDashboard = () => {
       case "Category Management":
         return <CategoryManagement />
       case "Financial Management":
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              <StatCard title="Monthly Revenue" value={financialData.monthlyRevenue} icon={DollarSign} color="green" />
-              <StatCard title="Platform Commission" value={financialData.platformCommission} icon={Percent} color="blue" />
-              <StatCard title="Pending Payouts" value={financialData.pendingPayouts} icon={Clipboard} color="orange" />
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h4 className="text-xl font-semibold mb-4">Revenue Distribution</h4>
-              <DoughnutChart />
-            </div>
-          </div>
-        )
+        return <FinancialManagement />
+        
       case "Shop Management":
         return <ShopManagement />
       default:

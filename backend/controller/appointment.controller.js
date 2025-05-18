@@ -29,6 +29,23 @@ const getAppointment = async (req, res) => {
     }
 };
 
+//get all appointment
+const getAllAppointments = async (req, res) => {
+    try {
+        console.log("get all appointment called");
+        const appointments = await Appointment.find()
+            .populate('customer')
+            .populate('shop')
+            .populate('service')
+            .populate('schedule');
+        console.log(appointments);
+        res.json(appointments);
+    } catch (error) {
+        console.error("Error in getAllAppointments:", error); // Add this line
+        res.status(500).json({ message: error.message });
+    }
+};
+
 // Update payment details
 const updatePayment = async (req, res) => {
     try {
@@ -347,6 +364,7 @@ const handleRequest = async (req, res) => {
 module.exports = {
     createAppointment,
     getAppointment,
+    getAllAppointments,
     updatePayment,
     updateStatus,
     handleFeedback,

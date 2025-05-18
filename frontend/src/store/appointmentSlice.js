@@ -11,7 +11,8 @@ export const fetchAppointments = createAsyncThunk(
   'appointments/fetchAppointments',
   async (queryParams = {}, { rejectWithValue }) => {
     try {
-      const response = await axios.get(API_URL, { params: queryParams });
+      console.log("fetching all appointments");
+      const response = await axios.get(`${API_URL}/fetchAllAppointment`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
