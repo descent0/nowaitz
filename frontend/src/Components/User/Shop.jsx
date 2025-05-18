@@ -25,7 +25,7 @@ const ServiceCard = ({ service }) => (
     <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
     <p className="text-gray-600 mb-4 text-sm">{service.description}</p>
     <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-      <span className="text-2xl font-bold text-blue-600">${service.price.toFixed(2)}</span>
+      <span className="text-2xl font-bold text-blue-600">Rs {service.price.toFixed(2)}</span>
       <Link 
         to="book-appointment"
         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
@@ -39,14 +39,11 @@ const ServiceCard = ({ service }) => (
 const TeamMemberCard = ({ member }) => (
   <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
     <div className="flex flex-col sm:flex-row items-center gap-4">
-      <img 
-        src={member.image} 
-        alt={member.name} 
-        className="w-24 h-24 rounded-full object-cover border-4 border-blue-100"
-        onError={(e) => {
-          e.target.src = 'https://via.placeholder.com/128';
-        }}
-      />
+      <img
+  src={`https://placehold.co/128x128?text=${member.name.charAt(0).toUpperCase()}`}
+  alt={member.name}
+  className="w-26 h-26 object-cover rounded-full border-4 border-blue-100"
+/>
       <div className="text-center sm:text-left">
         <h3 className="text-xl font-semibold">{member.name}</h3>
         <p className="text-gray-600 text-sm mb-2">{member.role}</p>

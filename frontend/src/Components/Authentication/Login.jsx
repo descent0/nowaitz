@@ -53,7 +53,24 @@ const LoginPage = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.replace('http://localhost:5002/api/auth/google');
+    const width = 500, height = 600;
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
+    const googleWindow = window.open(
+      'http://localhost:5002/api/auth/google',
+      'Google Login',
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
+
+    // Listen for message from popup
+    window.addEventListener('message', (event) => {
+      if (event.origin !== 'http://localhost:5002') return;
+      if (event.data && event.data.user) {
+        // Save user to Redux or localStorage as needed
+        // dispatch(loginUserSuccess(event.data.user));
+        navigate('/', { replace: true });
+      }
+    }, { once: true });
   };
 
   const handleForgotPassword = () => {

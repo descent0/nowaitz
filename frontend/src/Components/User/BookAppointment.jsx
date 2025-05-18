@@ -258,7 +258,7 @@ const handleBookAppointment=()=>{
           )}
 
           {/* Schedule Selection */}
-          {selectedService && (
+          {selectedService.length > 0 && (
             <section ref={scheduleSectionRef} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
               <h2 className="text-xl font-bold text-blue-600 mb-4">Choose Time Slot</h2>
               {statusMessage && (
@@ -306,7 +306,7 @@ const handleBookAppointment=()=>{
         }
 
           {/* Payment Section */}
-          {selectedSlot.length!=0&&selectedService && (
+          {selectedSlot.length !== 0 && selectedService.length > 0 && (
             <section ref={bookSlotButtonRef} onClick={handleBookAppointment} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
               <PaymentComponent appointmentData={appointmentData}/>
             </section>

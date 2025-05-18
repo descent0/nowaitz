@@ -4,15 +4,21 @@ import { createOrder, verifyPayment } from "../../store/paymentSlice";
 import { fetchScheduleByDateAndEmployee } from './../../store/scheduleSlice';
 import { useNavigate } from "react-router-dom";
 
+// Move this outside the component so it's only loaded once
+let razorpayScriptPromise = null;
 const loadRazorpayScript = () => {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Failed to load Razorpay SDK"));
-    document.body.appendChild(script);
-  });
+  if (!razorpayScriptPromise) {
+    razorpayScriptPromise = new Promise((resolve, reject) => {
+      if (window.Razorpay) return resolve();
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error("Failed to load Razorpay SDK"));
+      document.body.appendChild(script);
+    });
+  }
+  return razorpayScriptPromise;
 };
 
 const PaymentComponent = ({ appointmentData }) => {
@@ -23,16 +29,13 @@ const PaymentComponent = ({ appointmentData }) => {
   const navigate=useNavigate();
 
   useEffect(() => {
+    let isMounted = true;
     loadRazorpayScript()
-      .then(() => setIsScriptLoaded(true))
+      .then(() => {
+        if (isMounted) setIsScriptLoaded(true);
+      })
       .catch((error) => console.error("Razorpay SDK load error:", error));
-
-    return () => {
-      const script = document.querySelector(
-        'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
-      );
-      if (script) document.body.removeChild(script);
-    };
+    return () => { isMounted = false; };
   }, []);
 
   const handlePayment = async () => {
@@ -103,19 +106,29 @@ const PaymentComponent = ({ appointmentData }) => {
     <div className="w-full max-w-md mx-auto p-4">
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold mb-4">Complete Your Payment</h2>
-        <div className="mb-4">
-        </div>
+        <div className="mb-4"></div>
         {error && <p className="text-red-500">{error}</p>}
-        <button
-          onClick={handlePayment}
-          disabled={loading}
-          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 
-                     focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-                     disabled:opacity-50 disabled:cursor-not-allowed
-                     transition duration-150 ease-in-out"
-        >
-          {loading ? "Processing..." : `Pay INR`}
-        </button>
+        {!isScriptLoaded ? (
+          <button
+            disabled
+            className="w-full bg-gray-300 text-gray-600 py-2 px-4 rounded-md opacity-50 cursor-not-allowed"
+          >
+            Loading Payment...
+          </button>
+        ) : (
+          <button
+            onClick={handlePayment}
+            disabled={loading}
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+                       disabled:opacity-50 disabled:cursor-not-allowed
+                       transition duration-150 ease-in-out"
+          >
+            {loading
+              ? "Processing..."
+              : `Pay INR ${appointmentData?.amount || ""}`}
+          </button>
+        )}
       </div>
     </div>
   );

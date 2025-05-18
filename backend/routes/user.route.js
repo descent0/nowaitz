@@ -36,14 +36,29 @@ userRouter.get('/google/callback',
     passport.authenticate('google', { session: false, failureRedirect: '/login' }),
     async (req, res) => {
         try {
-            console.log("before calling generate token");
-            const token = generateToken(req.user._id, res);
+            const token = generateToken(req.user._id, "user",res);
             res.cookie('jwt', token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'Strict'
             });
-            res.redirect('http://localhost:3000');
+            // Send user data to opener window and close popup
+            res.send(`
+                <script>
+                  window.opener.postMessage(
+                    { user: ${JSON.stringify({
+                        _id: req.user._id,
+                        fullName: req.user.name,
+                        email: req.user.email,
+                        profilePicture: req.user.profilePicture,
+                        role: req.user.role,
+                        message: "Google login successful"
+                    })} },
+                    "http://localhost:5173"
+                  );
+                  window.close();
+                </script>
+            `);
         } catch (err) {
             console.error('Error during authentication:', err);
             res.status(500).json({ message: 'Authentication failed', error: err });
