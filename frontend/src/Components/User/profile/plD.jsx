@@ -52,47 +52,20 @@ function PersonalDetails() {
         </div>
         
         <div className="space-y-6">
-          {[
-            { label: 'Primary Phone', name: 'phone', value: formData.phone, icon: '📱' },
-            { label: 'Alternate Phone', name: 'addPhone', value: formData.addPhone, icon: '📞' },
-            { label: 'Address', name: 'address', value: formData.address, icon: '🏠' },
-          ].map((item, index) => (
-            <div key={index} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="text-xl">{item.icon}</span>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium text-gray-500">{item.label}</span>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name={item.name}
-                    value={item.value}
-                    onChange={handleInputChange}
-                    className="text-gray-900 font-medium border-b focus:outline-none"
-                  />
-                ) : (
-                  <span className="text-gray-900 font-medium">{item.value}</span>
-                )}
-              </div>
+          <div className="flex items-center space-x-3">
+            <span className="text-2xl">📱</span>
+            <div>
+              <div className="text-sm text-gray-500">Primary Phone</div>
+              <div className="text-lg font-medium text-gray-900">{formData.phone}</div>
             </div>
-          ))}
-        </div>
-
-        <div className="mt-6 flex justify-end space-x-4">
-          {isEditing ? (
-            <button
-              onClick={handleSave}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition"
-            >
-              Save
-            </button>
-          ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300 transition"
-            >
-              Edit
-            </button>
-          )}
+          </div>
+          <div className="flex items-center space-x-3">
+            <span className="text-2xl">🏠</span>
+            <div>
+              <div className="text-sm text-gray-500">Address</div>
+              <div className="text-lg font-medium text-gray-900">{formData.address}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

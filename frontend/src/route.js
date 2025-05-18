@@ -142,7 +142,7 @@ const routes = createBrowserRouter([
   },
   ,{
     path:"/AdminDashBoard",
-    element:<AdminDashBoard/>
+    element:<ProtectedComponents><AdminDashBoard/></ProtectedComponents>
   }
 ]);
 

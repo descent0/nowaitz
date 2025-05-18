@@ -36,7 +36,7 @@ const html=`
     <p>
         <strong>📅 Date:</strong> ${appointment.schedule[0].date}<br>
         <strong>⏰ Time:</strong> ${appointment.schedule[0].slot}<br>
-        <strong>📍 Location:</strong> ${appointment.shop.address}
+        <strong>📍 Location:</strong> ${appointment.shop.location}
     </p>
     <p>Please make sure to arrive 5-10 minutes early. If you have any questions or need to reschedule, feel free to contact us.</p>
     <p>Thank you for choosing <strong>${appointment.shop.name}</strong>!</p>
@@ -98,7 +98,10 @@ const updateAppointmentStatus = async (razorpay_order_id, updateData) => {
         { new: true, runValidators: true }
     );
     const updatedAppointment = await Appointment.findOne({ razorpayOrderId: razorpay_order_id })
-    .populate('customer', 'name email phone');
+    .populate('customer', 'name email phone')
+    .populate('shop', 'name location')
+    .populate('service', 'name price')
+    .populate('schedule', 'date slot');
 
     console.log("Updated Appointment:", updatedAppointment);
 sendConfirmationMessage(updatedAppointment);

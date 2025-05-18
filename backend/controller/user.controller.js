@@ -203,8 +203,15 @@ const checkAuth = (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password"); // Excludes password field
-    res.status(200).json(users);
+    // Find all users with role 'user'
+    const users = await User.find().select("-password");
+    // Count users with role 'user'
+    const totalUsers = await User.countDocuments({ role: "user" });
+    console.log("Total users:", totalUsers, users);
+    res.status(200).json({
+      totalUsers,
+      users,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

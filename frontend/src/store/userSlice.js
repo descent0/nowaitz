@@ -80,6 +80,7 @@ export const getAllUsers = createAsyncThunk(
       const response = await axios.get(`${API_URL}`, {
         headers: { "Content-Type": "application/json" },
         });
+        console.log("response data", JSON.stringify(response.data, null, 2));
       return response.data;
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'An error occurred during fetching all users';
@@ -148,9 +149,10 @@ const authUserSlice = createSlice({
   initialState: {
     user: null,
     users: [],
+    totalUsers: 0,      // <-- add this line
     isAuthenticated: false,
-    authLoading: false,      // <-- NEW
-    otpLoading: false,       // <-- NEW
+    authLoading: false,
+    otpLoading: false,
     error: null,
     message: '',
     otpSent: false,
@@ -252,7 +254,56 @@ const authUserSlice = createSlice({
       .addCase(verifyOtp.rejected, (state, action) => {
         state.otpLoading = false;
         state.error = action.payload;
-      });
+      })
+      // Get All Users
+      .addCase(getAllUsers.pending, (state) => {
+        state.authLoading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.authLoading = false;
+        state.users = action.payload.users;        // <-- store the array
+        state.totalUsers = action.payload.totalUsers; // <-- store the count
+      })
+      .addCase(getAllUsers.rejected, (state, action) => {
+        state.authLoading = false;
+        state.error = action.payload;
+      })
+      // Google Login Callback
+      .addCase(googleLoginCallback.pending, (state) => {
+        state.authLoading = true;
+      })
+      .addCase(googleLoginCallback.fulfilled, (state, action) =>
+        {
+          state.authLoading = false;
+          state.isAuthenticated = true;
+          state.user = action.payload;
+        }
+      )
+      .addCase(googleLoginCallback.rejected, (state, action) => {
+        state.authLoading = false;
+        state.error = action.payload;
+      })
+      // Update User Details
+      .addCase(updateUserDetails.pending, (state) =>
+        {
+          state.authLoading = true;
+        }
+      )
+      .addCase(updateUserDetails.fulfilled, (state, action) =>
+        {
+          state.authLoading = false;
+          state.user = action.payload;
+          state.message = action.payload.message;
+        }
+      )
+      .addCase(updateUserDetails.rejected, (state, action) =>
+        {
+          state.authLoading = false;
+          state.error = action.payload;
+        }
+      );
+  // Handle any other actions that might not be covered
+  // by the above cases
   }
 });
 
