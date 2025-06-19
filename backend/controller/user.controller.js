@@ -190,10 +190,8 @@ const verifyEmail = async (req, res) => {
 const checkAuth = (req, res) => {
   try {
     if (!req.user) {
-      console.log("User not authenticated");
       return res.status(401).json({ message: "User not authenticated" });
     }
-    console.log("Authenticated User:", req.user); // Log the authenticated user details
     res.status(200).json(req.user);
   } catch (e) {
     console.error("Error in checkAuth:", e); // Log the error in more detail
@@ -203,6 +201,7 @@ const checkAuth = (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
+   console.log("📥 getAllUsers called");
     // Find all users with role 'user'
     const users = await User.find().select("-password");
     // Count users with role 'user'

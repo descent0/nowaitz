@@ -10,34 +10,31 @@ const {
   getScheduleByDate,
   getScheduleByDateAndEmployee
 } = require("../controller/schedule.controller"); 
+const { protect } = require("../middleware/protect");
+const { protectShop } = require("../middleware/protectShop");
 
 const scheduleRouter = express.Router();
 
-// Get all schedules
-scheduleRouter.get("/", getAllSchedules);
+scheduleRouter.get("/", protect('user'), getAllSchedules);
 
-// Get a schedule by ID
 scheduleRouter.get("/id/:id", getScheduleById);
 
-// Get schedules by shopId
 scheduleRouter.get("/shop/:shopId", getScheduleByShopId);
 
-// Get schedules by employeeId
+
 scheduleRouter.get("/employee/:employeeId", getSchedulesByEmployee);
 
-// Get schedules by date
+
 scheduleRouter.get("/date", getScheduleByDate);
 
-// Get available schedules by date
+
 scheduleRouter.get("/available", getAvailableSchedules);
 
-// Get schedules by date and employeeId
+
 scheduleRouter.get("/date/employee", getScheduleByDateAndEmployee);
 
-// Update a schedule by ID
-scheduleRouter.put("/id/:id", updateScheduleById);
+scheduleRouter.put("/id/:id", protectShop, updateScheduleById);
 
-// Delete a schedule by ID
-scheduleRouter.delete("/id/:id", deleteScheduleById);
+scheduleRouter.delete("/id/:id",protectShop, deleteScheduleById);
 
 module.exports = scheduleRouter;

@@ -41,7 +41,12 @@ export const getServicesByShopId = createAsyncThunk(
   "services/getServicesByShopId",
   async (shopId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://localhost:5002/api/serv/services/shop/${shopId}`);
+      const response = await axios.get(`http://localhost:5002/api/serv/services/shop/${shopId}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response ? error.response.data : error.message);

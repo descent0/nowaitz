@@ -1,27 +1,24 @@
 const express = require("express");
 const { createOrder, verifyPayment, capturePayment, cancelPayment, refundPayment, fetchOrder, fetchPayment, fetchRefund } = require("../controller/payment.controller");
+const { protect } = require("../middleware/protect");
 
 const paymentRouter = express.Router();
 
-// Update the route to match frontend request
-paymentRouter.post("/order", createOrder);
+paymentRouter.post("/order",protect('user'), createOrder);
 
-// 🔹 Verify payment signature
-paymentRouter.post("/payment/verify", verifyPayment);
+paymentRouter.post("/payment/verify",protect('user'), verifyPayment);
 
-// 🔹 Capture payment manually (if manual capture is enabled)
-paymentRouter.post("/payment/capture", capturePayment);
+paymentRouter.post("/payment/capture",protect('user'), capturePayment);
 
-// 🔹 Cancel an authorized payment (only if not captured)
-paymentRouter.post("/payment/cancel", cancelPayment);
 
-// 🔹 Refund a captured payment (full or partial)
-paymentRouter.post("/payment/refund", refundPayment);
+paymentRouter.post("/payment/cancel",protect('user'), cancelPayment);
 
-// 🔹 Fetch details of a specific order
-paymentRouter.get("/order/:order_id", fetchOrder);
+paymentRouter.post("/payment/refund",protect('user'), refundPayment);
 
-// 🔹 Fetch details of a specific payment
+
+paymentRouter.get("/order/:order_id",protect('user'), fetchOrder);
+
+
 paymentRouter.get("/payment/:payment_id", fetchPayment);
 
 // 🔹 Fetch details of a refund

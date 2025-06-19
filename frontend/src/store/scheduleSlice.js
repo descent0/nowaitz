@@ -6,7 +6,12 @@ const API_URL = "http://localhost:5002/api/sche";
 // Fetch all schedules
 export const fetchSchedules = createAsyncThunk("schedules/fetchAll", async (_, thunkAPI) => {
   try {
-    const response = await axios.get(`${API_URL}/`);
+    const response = await axios.get(`${API_URL}/`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -16,7 +21,12 @@ export const fetchSchedules = createAsyncThunk("schedules/fetchAll", async (_, t
 // Fetch schedule by ID
 export const fetchScheduleById = createAsyncThunk("schedules/fetchById", async (id, thunkAPI) => {
   try {
-    const response = await axios.get(`${API_URL}/id/${id}`);
+    const response = await axios.get(`${API_URL}/id/${id}`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -26,7 +36,12 @@ export const fetchScheduleById = createAsyncThunk("schedules/fetchById", async (
 // Fetch schedules by shop ID
 export const fetchSchedulesByShop = createAsyncThunk("schedules/fetchByShop", async (shopId, thunkAPI) => {
   try {
-    const response = await axios.get(`${API_URL}/shop/${shopId}`);
+    const response = await axios.get(`${API_URL}/shop/${shopId}`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -36,7 +51,12 @@ export const fetchSchedulesByShop = createAsyncThunk("schedules/fetchByShop", as
 // Fetch schedules by employee ID
 export const fetchSchedulesByEmployee = createAsyncThunk("schedules/fetchByEmployee", async (employeeId, thunkAPI) => {
   try {
-    const response = await axios.get(`${API_URL}/employee/${employeeId}`);
+    const response = await axios.get(`${API_URL}/employee/${employeeId}`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -46,7 +66,12 @@ export const fetchSchedulesByEmployee = createAsyncThunk("schedules/fetchByEmplo
 // Fetch schedules by date
 export const fetchSchedulesByDate = createAsyncThunk("schedules/fetchByDate", async (date, thunkAPI) => {
   try {
-    const response = await axios.get(`${API_URL}/date?date=${date}`);
+    const response = await axios.get(`${API_URL}/date?date=${date}`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -56,7 +81,12 @@ export const fetchSchedulesByDate = createAsyncThunk("schedules/fetchByDate", as
 // Fetch available schedules by date
 export const fetchAvailableSchedules = createAsyncThunk("schedules/fetchAvailable", async (date, thunkAPI) => {
   try {
-    const response = await axios.get(`${API_URL}/available?date=${date}`);
+    const response = await axios.get(`${API_URL}/available?date=${date}`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -67,7 +97,12 @@ export const fetchAvailableSchedules = createAsyncThunk("schedules/fetchAvailabl
 export const fetchScheduleByDateAndEmployee = createAsyncThunk("schedules/fetchByDateAndEmployee", async ({ date, employeeId }, thunkAPI) => {
   try {
     console.log(date,employeeId);
-    const response = await axios.get(`${API_URL}/date/employee?date=${date}&employeeId=${employeeId}`);
+    const response = await axios.get(`${API_URL}/date/employee?date=${date}&employeeId=${employeeId}`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -77,7 +112,12 @@ export const fetchScheduleByDateAndEmployee = createAsyncThunk("schedules/fetchB
 // Update schedule by ID
 export const updateSchedule = createAsyncThunk("schedules/update", async ({ id, data }, thunkAPI) => {
   try {
-    const response = await axios.put(`${API_URL}/id/${id}`, data);
+    const response = await axios.put(`${API_URL}/id/${id}`, data,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -87,7 +127,12 @@ export const updateSchedule = createAsyncThunk("schedules/update", async ({ id, 
 // Delete schedule by ID
 export const deleteSchedule = createAsyncThunk("schedules/delete", async (id, thunkAPI) => {
   try {
-    await axios.delete(`${API_URL}/id/${id}`);
+    await axios.delete(`${API_URL}/id/${id}`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return id;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);

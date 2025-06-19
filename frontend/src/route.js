@@ -1,151 +1,162 @@
+// route.js
 import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  checkAuthStatus,
+  logoutUser, // Make sure this exists in your userSlice
+} from "./store/userSlice";
+import { checkShop } from "./store/shopSlice";
+import Loading from "./Components/loading";
+
+// Components
 import LandingPage from "./Components/User/landingPage";
-import Shop from "./Components/User/Shop";
-import ServiceStores from "./Components/User/ServiceStores";
 import ServiceType from "./Components/User/ServiceType";
+import ServiceStores from "./Components/User/ServiceStores";
+import Shop from "./Components/User/Shop";
+import BookAppointment from "./Components/User/BookAppointment";
 import LoginPage from "./Components/Authentication/Login";
 import UserRegistrationPage from "./Components/Authentication/UserRegistration";
-import useAuth from "./utils/checkAuth";
 import Profile from "./Components/User/profile/Profile";
-import Loading from "./Components/loading";
 import DashBoard from "./Components/ServiceMan/DashBoard";
 import Appointments from "./Components/ServiceMan/Appointments";
 import Services from "./Components/ServiceMan/Services";
 import Schedule from "./Components/ServiceMan/Schedule";
 import Settings from "./Components/ServiceMan/Settings";
 import Employee from "./Components/ServiceMan/Employee";
-import BookAppointment from "./Components/User/BookAppointment";
-import { useEffect } from "react";
-import { checkAuthStatus } from "./store/userSlice";
 import AdminDashBoard from './Components/Admin/DashBoard';
 import RegisterShopForm from "./Components/utilComp/RegisterShopRequest";
-import { checkShop } from "./store/shopSlice";
 import HomeShop from "./Components/ServiceMan/HomeShop";
 import ShopLook from "./Components/ServiceMan/ShopLook";
 import PendingRequest from "./Components/ServiceMan/PendingRequest";
 
-const ProtectedComponents = ({ children }) => {
 
-   const {isAuthenticated,loading}=useSelector((state)=>state.authUser);
-   console.log(isAuthenticated,loading);
-   const dispatch=useDispatch();
-   useEffect(()=>{
-    dispatch(checkAuthStatus());
-   },[]);
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return children;
-};
-
-const ProtectedComponentIfLogin = ({ children }) => {
-  const { isAuthenticated, authLoading, user } = useSelector((state) => state.authUser);
-  const { isShopRegistered } = useSelector((state) => state.shop);
+// ✅ 1. Global Auth Checker — runs only once here
+const GlobalAuthLoader = ({ children }) => {
   const dispatch = useDispatch();
+  const { isAuthenticated, loading, user } = useSelector((state) => state.authUser);
+  const { isShopRegistered } = useSelector((state) => state.shop);
 
   useEffect(() => {
     dispatch(checkAuthStatus());
     dispatch(checkShop());
+
+    // Optional: periodic check for token expiry
+    const interval = setInterval(() => {
+      dispatch(checkAuthStatus());
+    }, 5 * 60 * 1000); // every 5 minutes
+
+    return () => clearInterval(interval);
   }, [dispatch]);
 
-  // Only show Loading for authLoading (not for OTP)
-  if (authLoading) {
-    return <Loading />;
-  }
-
-  if (isAuthenticated&& user.role==='user') {
-    return <Navigate to="/" replace />;
-  } else if (isShopRegistered) {
-    return <Navigate to="/shopDashBoard" replace />;
-  }else if (isAuthenticated && user.role === 'admin') {
-    return <Navigate to="/adminDashBoard" replace />;
-  }
+  if (loading) return <Loading />;
 
   return children;
 };
 
+// ✅ 2. Guards
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useSelector((state) => state.authUser);
+
+  if (loading) return <Loading />;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return children;
+};
+
+const RedirectIfAuthenticated = ({ children }) => {
+  const { isAuthenticated, loading, user } = useSelector((state) => state.authUser);
+  const { isShopRegistered } = useSelector((state) => state.shop);
+
+  if (loading) return <Loading />;
+
+  if (isAuthenticated && user?.role === 'user') return <Navigate to="/" replace />;
+  if (isAuthenticated && user?.role === 'admin') return <Navigate to="/AdminDashBoard" replace />;
+  if (isAuthenticated && isShopRegistered) return <Navigate to="/shopDashBoard" replace />;
+
+  return children;
+};
+
+// ✅ 3. Routes
 const routes = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ProtectedComponents>
+      <ProtectedRoute>
         <LandingPage />
-      </ProtectedComponents>
+      </ProtectedRoute>
     ),
     children: [
       { path: "", element: <ServiceType /> },
-      { path: "/:serviceType", element: <ServiceStores /> },
-      { path: "/:serviceType/:shop", element: <Shop /> },
-      { path:"/:serviceType/:shop/book-appointment",element:<BookAppointment/>}
+      { path: ":serviceType", element: <ServiceStores /> },
+      { path: ":serviceType/:shop", element: <Shop /> },
+      { path: ":serviceType/:shop/book-appointment", element: <BookAppointment /> },
     ],
   },
   {
     path: "/login",
     element: (
-      <ProtectedComponentIfLogin>
+      <RedirectIfAuthenticated>
         <LoginPage />
-      </ProtectedComponentIfLogin>
+      </RedirectIfAuthenticated>
     ),
   },
-  { path: "/passReset", element: <div>Email link to reset password</div> },
   {
     path: "/userRegister",
     element: (
-      <ProtectedComponentIfLogin>
+      <RedirectIfAuthenticated>
         <UserRegistrationPage />
-      </ProtectedComponentIfLogin>
+      </RedirectIfAuthenticated>
     ),
   },
   {
     path: "/profile",
     element: (
-      <ProtectedComponents>
+      <ProtectedRoute>
         <Profile />
-      </ProtectedComponents>
+      </ProtectedRoute>
     ),
   },
   {
     path: "/registerShop",
-    element: <RegisterShopForm/>
+    element: <RegisterShopForm />,
   },
   {
     path: "/shopDashBoard",
     element: <HomeShop />,
-    children:[
-      {path:"",element:<DashBoard/>},
+    children: [
+      { path: "", element: <DashBoard /> },
       { path: "appointments", element: <Appointments /> },
       { path: "services", element: <Services /> },
       { path: "schedule", element: <Schedule /> },
       { path: "settings", element: <Settings /> },
-      {
-        path: "manage-employee",
-        element: <Employee />,
-      },{
-        path:"shop-look",
-        element:<ShopLook/>
-      },{
-        path:"pending-requests",
-        element:<PendingRequest/>
-      }
-    ]
+      { path: "manage-employee", element: <Employee /> },
+      { path: "shop-look", element: <ShopLook /> },
+      { path: "pending-requests", element: <PendingRequest /> },
+    ],
   },
-  ,{
-    path:"/AdminDashBoard",
-    element:<ProtectedComponents><AdminDashBoard/></ProtectedComponents>
-  }
+  {
+    path: "/AdminDashBoard",
+    element: (
+      <ProtectedRoute>
+        <AdminDashBoard />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/passReset",
+    element: <div>Email link to reset password</div>,
+  },
 ]);
 
+// ✅ 4. Final Router Export
 export const AppRouter = () => {
-  return <RouterProvider router={routes} />;
+  return (
+    <GlobalAuthLoader>
+      <RouterProvider router={routes} />
+    </GlobalAuthLoader>
+  );
 };

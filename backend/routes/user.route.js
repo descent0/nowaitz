@@ -27,8 +27,8 @@ const validateSignup = (req, res, next) => {
 // Existing routes
 userRouter.post("/login", login);
 userRouter.post("/signup", validateSignup, signup);
-userRouter.post("/logout", logout);
-userRouter.get("/checkAuth", protect, checkAuth);
+userRouter.post("/logout",protect('admin','user'), logout);
+userRouter.get("/checkAuth", protect('admin','user'), checkAuth);
 
 userRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -71,8 +71,8 @@ userRouter.post("/send-otp", sendOtp); // Route to send OTP
 userRouter.post("/verify-otp", verifyOtp); // Route to verify OTP
 userRouter.post("/forgot-password", forgotPassword); // Route for forgot password
 
-userRouter.get("/", getAllUsers);
-userRouter.put("/:id", protect, updateUser); // Route for updating user
+userRouter.get("/",protect('admin'), getAllUsers);
+userRouter.put("/:id",protect('user'), updateUser); // Route for updating user
 
 module.exports = {
     userRouter,

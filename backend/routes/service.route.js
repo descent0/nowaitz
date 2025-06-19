@@ -1,27 +1,21 @@
 const express = require('express');
 const { createService, getAllServices, getServiceById, updateService, deleteService, getServicesByShop, searchServices } = require('../controller/service.controller');
+const { protectShop } = require('../middleware/protectShop');
+const { protect } = require('../middleware/protect');
 const serviceRouter = express.Router();
 
+serviceRouter.post('/services', protectShop, createService);
 
-// Route for creating a new service
-serviceRouter.post('/services', createService);
+serviceRouter.get('/services',protect('user'), getAllServices);
 
-// Route for getting all services (with optional filtering)
-serviceRouter.get('/services', getAllServices);
-
-// Route for getting a single service by ID
 serviceRouter.get('/services/:id', getServiceById);
 
-// Route for updating a service
-serviceRouter.put('/services/:id', updateService);
+serviceRouter.put('/services/:id', protectShop, updateService);
 
-// Route for deleting a service
-serviceRouter.delete('/services/:id', deleteService);
+serviceRouter.delete('/services/:id',protectShop, deleteService);
 
-// Route for getting services by shop ID
 serviceRouter.get('/services/shop/:shopId', getServicesByShop);
 
-// Route for searching services by name or description
 serviceRouter.get('/search', searchServices);
 
 module.exports = serviceRouter;

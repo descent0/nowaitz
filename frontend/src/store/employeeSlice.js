@@ -8,7 +8,12 @@ export const createEmployee = createAsyncThunk(
   "employees/createEmployee",
   async (employeeData, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(API_URL, employeeData);
+      const { data } = await axios.post(API_URL, employeeData,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "An error occurred");
@@ -20,7 +25,12 @@ export const getEmployees = createAsyncThunk(
   "employees/getEmployees",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(API_URL);
+      const { data } = await axios.get(API_URL,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "An error occurred");
@@ -32,7 +42,12 @@ export const getEmployeeById = createAsyncThunk(
   "employees/getEmployeeById",
   async (id, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`${API_URL}/${id}`);
+      const { data } = await axios.get(`${API_URL}/${id}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "An error occurred");
@@ -45,7 +60,12 @@ export const getEmployeesByShopId = createAsyncThunk(
   async (shopId, { rejectWithValue }) => {
     try {
       console.log("shopId fetching employees", shopId);
-      const { data } = await axios.get(`${API_URL}/shop/${shopId}`);
+      const { data } = await axios.get(`${API_URL}/shop/${shopId}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "An error occurred");
@@ -57,7 +77,12 @@ export const updateEmployee = createAsyncThunk(
   "employees/updateEmployee",
   async ({ id, employeeData }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.put(`${API_URL}/${id}`, employeeData);
+      const { data } = await axios.put(`${API_URL}/${id}`, employeeData,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "An error occurred");
@@ -69,7 +94,12 @@ export const deleteEmployee = createAsyncThunk(
   "employees/deleteEmployee",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axios.delete(`${API_URL}/${id}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return id;
     } catch (error) {
       return rejectWithValue(error.response?.data || "An error occurred");

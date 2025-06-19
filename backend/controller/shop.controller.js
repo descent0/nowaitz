@@ -230,10 +230,8 @@ const updateShopPassword = async (req, res) => {
 const checkShop = (req, res) => {
   try {
     if (!req.shop) {
-      console.log("Shop not authenticated");
       return res.status(401).json({ message: "Shop not authenticated" });
     }
-    console.log("Shop:", req.shop); // Log the authenticated user details
     res.status(200).json(req.shop);
   } catch (e) {
     console.error("Error in checkShop:", e); // Log the error in more detail

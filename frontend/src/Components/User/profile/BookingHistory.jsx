@@ -283,7 +283,7 @@ function BookingHistory() {
                       </td>
                       <td className="px-6 py-4">
                         <span className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm">
-                          {appointment.service[0].name}
+                          {appointment.service?.[0]?.name || "N/A"}
                         </span>
                       </td>
                       <td
@@ -350,7 +350,7 @@ function BookingHistory() {
                             <option value="" disabled>
                               Request
                             </option>
-                            <option value="Rescheduling">Reschedule</option>
+                            <option disabled value="Rescheduling">Reschedule(Coming soon)</option>
                             <option value="Cancellation">Cancel</option>
                           </select>
                         )}

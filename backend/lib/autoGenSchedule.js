@@ -109,9 +109,7 @@ const updateDailySchedules = async () => {
         // Delete previous day's schedules
         const previousDate = new Date(currentDate);
         previousDate.setDate(previousDate.getDate() - 1);
-        const deleteResult = await Schedule.deleteMany({ date: previousDate });
-        console.log(`Deleted ${deleteResult.deletedCount} schedules for ${previousDate.toISOString().split('T')[0]}`);
-
+        
         // Set target date to 10 days from now
         const targetDate = new Date(currentDate);
         targetDate.setDate(targetDate.getDate() + 10);

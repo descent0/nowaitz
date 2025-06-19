@@ -28,7 +28,12 @@ export const getAllShopByCategory = createAsyncThunk(
   "shop/getShopByCategory",
   async (shopCategory, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${apiUrl}/shop/${shopCategory}`);
+      const response = await axios.get(`${apiUrl}/shop/${shopCategory}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -42,7 +47,12 @@ export const getAllShopByShopId = createAsyncThunk(
   "shop/getShopByShopId", // Fixed action type name here
   async (shopID, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${apiUrl}/${shopID}`);
+      const response = await axios.get(`${apiUrl}/${shopID}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
        console.log(response.data);
       return response.data;
     } catch (error) {
@@ -56,7 +66,12 @@ export const getAllShops = createAsyncThunk(
   "shop/getAllShops",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${apiUrl}/allShop`);
+      const response = await axios.get(`${apiUrl}/allShop`,{
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       console.log(response.data);
       return response.data;
     } catch (error) {
@@ -92,7 +107,12 @@ export const approveShop = createAsyncThunk(
   async (shop_id, { rejectWithValue }) => {
     try {
       console.log("under rtk " + shop_id);
-      const response = await axios.put(`${apiUrl}/approve/${shop_id}`);
+      const response = await axios.put(`${apiUrl}/approve/${shop_id}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       console.log(response.data);
       return response.data;
     } catch (error) {
@@ -107,7 +127,12 @@ export const updateShopStatus = createAsyncThunk(
   "shop/updateShopStatus",
   async ({ shop_id, status }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${apiUrl}/status/${shop_id}`, { status });
+      const response = await axios.put(`${apiUrl}/status/${shop_id}`, { status },{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -176,7 +201,12 @@ export const getShopById = createAsyncThunk(
   "shop/getShopById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${apiUrl}/shop/${id}`);
+      const response = await axios.get(`${apiUrl}/shop/${id}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(

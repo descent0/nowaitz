@@ -40,7 +40,7 @@ ShopRouter.post('/register', upload.array('images', 10), registerShop);
 ShopRouter.post('/login', loginShop);
 ShopRouter.post('/logout',logoutShop)
 
-ShopRouter.get('/allShop', getAllShops);
+ShopRouter.get('/allShop',protect('admin'), getAllShops);
 ShopRouter.put('/update',  updateShopInfo);
 ShopRouter.get("/checkShop", protectShop, checkShop);
 

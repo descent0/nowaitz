@@ -7,7 +7,12 @@ export const getAllCategories = createAsyncThunk(
   "category/getAllCategories",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(apiUrl);
+      const response = await axios.get(apiUrl,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data.categories;
     } catch (error) {
       return rejectWithValue(
@@ -22,7 +27,12 @@ export const getAllApprovedCategories=createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       console.log("Inside the slice");
-      const response = await axios.get(`${apiUrl}/approved`);
+      const response = await axios.get(`${apiUrl}/approved`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       console.log(response.data.categories);
       return response.data.categories;
     } catch (error) {
@@ -37,7 +47,12 @@ export const getCategoryById = createAsyncThunk(
   "category/getCategoryById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${apiUrl}/${id}`);
+      const response = await axios.get(`${apiUrl}/${id}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data.category;
     } catch (error) {
       return rejectWithValue(
@@ -51,7 +66,12 @@ export const updateCategory = createAsyncThunk(
   "category/updateCategory",
   async ({ id, categoryData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${apiUrl}/${id}`, categoryData);
+      const response = await axios.put(`${apiUrl}/${id}`, categoryData,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data.category;
     } catch (error) {
       return rejectWithValue(
@@ -65,7 +85,12 @@ export const deleteCategory = createAsyncThunk(
   "category/deleteCategory",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${apiUrl}/${id}`);
+      await axios.delete(`${apiUrl}/${id}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return id;
     } catch (error) {
       return rejectWithValue(

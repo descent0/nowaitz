@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkShop } from '../../store/shopSlice';
-import { createService, deleteService, getServicesByShopId, updateService } from '../../store/serviceSlice';
+import {
+  createService,
+  deleteService,
+  getServicesByShopId,
+  updateService
+} from '../../store/serviceSlice';
 
 const Services = () => {
   const dispatch = useDispatch();
@@ -17,7 +22,7 @@ const Services = () => {
   const [showForm, setShowForm] = useState(false);
 
   const shopData = useSelector((state) => state.shop.shop);
-  const shopId = shopData?._id; 
+  const shopId = shopData?._id;
 
   const services = useSelector((state) => state.services.services);
   const loading = useSelector((state) => state.services.loading);
@@ -26,7 +31,7 @@ const Services = () => {
   useEffect(() => {
     dispatch(checkShop());
   }, [dispatch]);
-  
+
   useEffect(() => {
     if (shopId) {
       dispatch(getServicesByShopId(shopId));
@@ -41,12 +46,12 @@ const Services = () => {
       shopId: shopId
     };
     dispatch(createService(serviceWithShopId));
-    setNewService({ 
-      name: '', 
-      description: '', 
-      price: '', 
+    setNewService({
+      name: '',
+      description: '',
+      price: '',
       duration: '',
-      shopId: null 
+      shopId: null
     });
     setShowForm(false);
   };
@@ -54,14 +59,14 @@ const Services = () => {
   const handleUpdateService = () => {
     if (editingService) {
       const { _id, ...updatedService } = editingService;
-      dispatch(updateService({ 
-        serviceId: _id, 
+      dispatch(updateService({
+        serviceId: _id,
         serviceData: {
           ...updatedService,
           price: Number(updatedService.price),
           duration: Number(updatedService.duration),
           shopId: shopId
-        } 
+        }
       }));
       setEditingService(null);
       setShowForm(false);
@@ -89,7 +94,10 @@ const Services = () => {
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-blue-800">Services</h1>
             <button
-              onClick={() => setShowForm(!showForm)}
+              onClick={() => {
+                setShowForm(!showForm);
+                setEditingService(null); // Clear editing state when toggling form
+              }}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-sm transition-colors"
             >
               {showForm ? 'Close Form' : '+ Add Service'}
@@ -97,6 +105,67 @@ const Services = () => {
           </div>
         </div>
       </header>
+
+      {showForm && (
+        <div className="container mx-auto px-6 mb-6">
+          <div className="bg-white p-6 rounded-lg shadow-lg border-2 border-blue-800">
+            <h2 className="text-xl font-bold text-blue-800 mb-4">
+              {editingService ? 'Edit Service' : 'Create New Service'}
+            </h2>
+            <div className="grid gap-4">
+              <input
+                type="text"
+                placeholder="Service Name"
+                className="p-3 border rounded-md"
+                value={editingService ? editingService.name : newService.name}
+                onChange={(e) =>
+                  editingService
+                    ? setEditingService({ ...editingService, name: e.target.value })
+                    : setNewService({ ...newService, name: e.target.value })
+                }
+              />
+              <textarea
+                placeholder="Description"
+                className="p-3 border rounded-md"
+                value={editingService ? editingService.description : newService.description}
+                onChange={(e) =>
+                  editingService
+                    ? setEditingService({ ...editingService, description: e.target.value })
+                    : setNewService({ ...newService, description: e.target.value })
+                }
+              />
+              <input
+                type="number"
+                placeholder="Price"
+                className="p-3 border rounded-md"
+                value={editingService ? editingService.price : newService.price}
+                onChange={(e) =>
+                  editingService
+                    ? setEditingService({ ...editingService, price: e.target.value })
+                    : setNewService({ ...newService, price: e.target.value })
+                }
+              />
+              <input
+                type="number"
+                placeholder="Duration (in minutes)"
+                className="p-3 border rounded-md"
+                value={editingService ? editingService.duration : newService.duration}
+                onChange={(e) =>
+                  editingService
+                    ? setEditingService({ ...editingService, duration: e.target.value })
+                    : setNewService({ ...newService, duration: e.target.value })
+                }
+              />
+              <button
+                onClick={editingService ? handleUpdateService : handleAddService}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md"
+              >
+                {editingService ? 'Update Service' : 'Add Service'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="container mx-auto px-6">
         <input
@@ -122,14 +191,14 @@ const Services = () => {
                   <span>{service.duration} mins</span>
                 </div>
                 <div className="mt-4 flex justify-end gap-3">
-                  <button 
-                    onClick={() => handleEdit(service)} 
+                  <button
+                    onClick={() => handleEdit(service)}
                     className="text-blue-600 hover:text-blue-800"
                   >
                     Edit
                   </button>
-                  <button 
-                    onClick={() => handleRemoveService(service._id)} 
+                  <button
+                    onClick={() => handleRemoveService(service._id)}
                     className="text-red-600 hover:text-red-800"
                   >
                     Delete

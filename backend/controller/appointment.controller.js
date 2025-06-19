@@ -1,3 +1,4 @@
+const { sendMessage } = require('../lib/sendRequestMessage');
 const Appointment = require('../model/appointment.model');
 const { Schedule } = require('../model/schedule.model');
 
@@ -274,6 +275,7 @@ const requestChange = async (req, res) => {
     }
 };
 
+
 // Handle appointment requests
 const handleRequest = async (req, res) => {
     try {
@@ -282,8 +284,11 @@ const handleRequest = async (req, res) => {
         const { requestStatus } = req.body;
         console.log(req.body);
 
-        // Fetch the appointment by ID
-        const appointment = await Appointment.findById(req.params.id).populate('schedule');
+        // Fetch the appointment by ID with all necessary populated fields
+        const appointment = await Appointment.findById(req.params.id)
+            .populate('schedule')
+            .populate('customer') // Make sure customer is populated for email
+            .populate('shop');    // Make sure shop is populated for email
 
         // Check if the appointment exists and is confirmed
         if (!appointment || appointment.status !== 'Confirmed') {
@@ -297,69 +302,145 @@ const handleRequest = async (req, res) => {
             appointment.rescheduleSlot = null;
 
             await appointment.save();
-            return res.status(200).json({ message: 'Request rejected successfully', appointment });
+            
+            // Send email notification for rejection
+            try {
+                await sendMessage(appointment);
+                console.log("Rejection email sent successfully");
+            } catch (emailError) {
+                console.error("Error sending rejection email:", emailError);
+                // Don't fail the request if email fails
+            }
+            
+            return res.status(200).json({ 
+                message: 'Request rejected successfully', 
+                appointment 
+            });
         }
-    //   console.log("requested appointemnt",appointment);
+
         // Handle approved cancellation requests
         if (requestStatus === 'Approved' && appointment.requestType === 'Cancellation') {
+            // Update the schedule to mark it as available
             await Schedule.findByIdAndUpdate(
                 appointment.schedule._id,
                 { $set: { isBooked: false } },
                 { new: true }
             );
+            
+            // Update appointment status before sending email
+            appointment.requestStatus = 'Approved';
+            await appointment.save();
+            
+            // Send email notification for approved cancellation
+            try {
+                await sendMessage(appointment);
+                console.log("Cancellation approval email sent successfully");
+            } catch (emailError) {
+                console.error("Error sending cancellation email:", emailError);
+            }
+            
+            // Delete the appointment after email is sent
             await Appointment.findByIdAndDelete(req.params.id);
-            return res.status(200).json({ message: 'Cancellation request approved and appointment deleted successfully' });
+            
+            return res.status(200).json({ 
+                message: 'Cancellation request approved and appointment deleted successfully' 
+            });
         }
-        console.log("below this line")
+
+        console.log("below this line");
+        
         // Handle approved rescheduling requests
         if (requestStatus === 'Approved' && appointment.requestType === 'Rescheduling') {
-            console.log("inside rescheduling request")
+            console.log("inside rescheduling request");
             console.log("reschedule date ", appointment.rescheduleDate);
+            
             if (!appointment.rescheduleDate || !appointment.rescheduleSlot) {
-                return res.status(400).json({ message: 'Reschedule date and slot are required for rescheduling' });
+                return res.status(400).json({ 
+                    message: 'Reschedule date and slot are required for rescheduling' 
+                });
             }
 
             console.log("reschedule date ", new Date(appointment.rescheduleDate));
-
-          
+            
+            // Find the new schedule slot
             const newSchedule = await Schedule.findOne({
                 date: new Date(appointment.rescheduleDate),
                 slot: appointment.rescheduleSlot,
-                isBooked:false
+                isBooked: false
             });
+            
             console.log("new schedule", newSchedule);
 
             if (!newSchedule) {
-                return res.status(404).json({ message: 'The requested schedule does not exist' });
+                return res.status(404).json({ 
+                    message: 'The requested schedule slot is not available' 
+                });
             }
 
             // Mark the new schedule as booked
             newSchedule.isBooked = true;
             await newSchedule.save();
 
-            // Keep the current schedule marked as booked
+            // Free up the current schedule slot
             const currentSchedule = await Schedule.findById(appointment.schedule._id);
             if (currentSchedule) {
                 currentSchedule.isBooked = false;
                 await currentSchedule.save();
             }
 
+            // Store the reschedule info before updating the appointment
+            const rescheduleInfo = {
+                rescheduleDate: appointment.rescheduleDate,
+                rescheduleSlot: appointment.rescheduleSlot
+            };
+
             // Update the appointment with the new schedule
             appointment.requestStatus = 'Approved';
             appointment.schedule = newSchedule;
+            // Keep reschedule info temporarily for email
+            await appointment.save();
+            
+            // Re-populate the appointment for email sending
+            const updatedAppointment = await Appointment.findById(appointment._id)
+                .populate('schedule')
+                .populate('customer')
+                .populate('shop');
+            
+            // Add reschedule info back for email
+            updatedAppointment.rescheduleDate = rescheduleInfo.rescheduleDate;
+            updatedAppointment.rescheduleSlot = rescheduleInfo.rescheduleSlot;
+            
+            // Send email notification for approved rescheduling
+            try {
+                await sendMessage(updatedAppointment);
+                console.log("Rescheduling approval email sent successfully");
+            } catch (emailError) {
+                console.error("Error sending rescheduling email:", emailError);
+            }
+            
+            // Now clear the reschedule fields
             appointment.rescheduleDate = null;
             appointment.rescheduleSlot = null;
-
             await appointment.save();
-            return res.status(200).json({ message: 'Rescheduling request approved successfully', appointment });
+
+            return res.status(200).json({ 
+                message: 'Rescheduling request approved successfully', 
+                appointment: updatedAppointment 
+            });
         }
 
         // If the requestStatus is invalid
-        return res.status(400).json({ message: 'Invalid request status or request type' });
+        return res.status(400).json({ 
+            message: 'Invalid request status or request type' 
+        });
+        
     } catch (error) {
+        console.error("Error in handleRequest:", error);
         res.status(500).json({ message: error.message });
     }
 };
+
+module.exports = { handleRequest };
 
 module.exports = {
     createAppointment,

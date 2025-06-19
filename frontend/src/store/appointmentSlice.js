@@ -12,7 +12,12 @@ export const fetchAppointments = createAsyncThunk(
   async (queryParams = {}, { rejectWithValue }) => {
     try {
       console.log("fetching all appointments");
-      const response = await axios.get(`${API_URL}/fetchAllAppointment`);
+      const response = await axios.get(`${API_URL}/fetchAllAppointment`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -25,7 +30,12 @@ export const fetchAppointmentById = createAsyncThunk(
   'appointments/fetchAppointmentById',
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/${id}`);
+      const response = await axios.get(`${API_URL}/${id}`,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -38,7 +48,12 @@ export const fetchAppointmentsByShopId = createAsyncThunk(
   'appointments/fetchAppointmentsByShopId',
   async ({ shopId, queryParams = {} }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/shop/${shopId}`, { params: queryParams });
+      const response = await axios.get(`${API_URL}/shop/${shopId}`, { params: queryParams },{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -51,7 +66,12 @@ export const fetchAppointmentsByUserId = createAsyncThunk(
   'appointments/fetchAppointmentsByUserId',
   async ({ userId, queryParams = {} }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/user/${userId}`, { params: queryParams });
+      const response = await axios.get(`${API_URL}/user/${userId}`, { params: queryParams },{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -64,7 +84,12 @@ export const createAppointment = createAsyncThunk(
   'appointments/createAppointment',
   async (appointmentData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(API_URL, appointmentData);
+      const response = await axios.post(API_URL, appointmentData,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -78,7 +103,12 @@ export const updateAppointmentStatus = createAsyncThunk(
   async ({ id, status }, { rejectWithValue }) => {
     try {
       console.log("updateint ")
-      const response = await axios.patch(`${API_URL}/${id}/status`, { status });
+      const response = await axios.patch(`${API_URL}/${id}/status`, { status },{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -91,7 +121,12 @@ export const cancelAppointment = createAsyncThunk(
   'appointments/cancelAppointment',
   async ({ id, cancellationData }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/${id}/cancel`, cancellationData);
+      const response = await axios.post(`${API_URL}/${id}/cancel`, cancellationData,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -104,7 +139,12 @@ export const sendRequest = createAsyncThunk(
   'appointments/sendRequest',
   async ({ id, requestData }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/${id}/request`, requestData);
+      const response = await axios.post(`${API_URL}/${id}/request`, requestData,{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -118,7 +158,12 @@ export const handleRequest = createAsyncThunk(
   async ({ id, requestStatus }, { rejectWithValue }) => {
     try {
       console.log("request status ",requestStatus);
-      const response = await axios.post(`${API_URL}/${id}/verify-request`, { requestStatus });
+      const response = await axios.post(`${API_URL}/${id}/verify-request`, { requestStatus },{
+         headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

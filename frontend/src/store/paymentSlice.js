@@ -10,7 +10,12 @@ export const createOrder = createAsyncThunk(
     async (appointmentData, { rejectWithValue }) => {
       try {
       
-        const response = await axios.post(`${API_BASE_URL}/order`, appointmentData);
+        const response = await axios.post(`${API_BASE_URL}/order`, appointmentData,{
+           headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
         // Assuming backend returns { success: true, data: order }
         console.log(response.data.appointment);
         console.log(response.data);
@@ -28,7 +33,12 @@ export const createOrder = createAsyncThunk(
     "payment/verifyPayment",
     async (paymentData, { rejectWithValue }) => {
       try {
-        const response = await axios.post(`${API_BASE_URL}/payment/verify`, paymentData);
+        const response = await axios.post(`${API_BASE_URL}/payment/verify`, paymentData,{
+           headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response?.data?.error || "Payment verification failed");
@@ -39,7 +49,12 @@ export const createOrder = createAsyncThunk(
 // 🔹 Fetch order details
 export const fetchOrder = createAsyncThunk("payment/fetchOrder", async (orderId, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/order/${orderId}`);
+    const response = await axios.get(`${API_BASE_URL}/order/${orderId}`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data.data;
   } catch (error) {
     return rejectWithValue(error.response?.data?.error || "Failed to fetch order details");
@@ -49,7 +64,12 @@ export const fetchOrder = createAsyncThunk("payment/fetchOrder", async (orderId,
 // 🔹 Fetch payment details
 export const fetchPayment = createAsyncThunk("payment/fetchPayment", async (paymentId, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/payment/${paymentId}`);
+    const response = await axios.get(`${API_BASE_URL}/payment/${paymentId}`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data.data;
   } catch (error) {
     return rejectWithValue(error.response?.data?.error || "Failed to fetch payment details");
@@ -59,7 +79,12 @@ export const fetchPayment = createAsyncThunk("payment/fetchPayment", async (paym
 // 🔹 Fetch refund details
 export const fetchRefund = createAsyncThunk("payment/fetchRefund", async (refundId, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/refund/${refundId}`);
+    const response = await axios.get(`${API_BASE_URL}/refund/${refundId}`,{
+       headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+    });
     return response.data.data;
   } catch (error) {
     return rejectWithValue(error.response?.data?.error || "Failed to fetch refund details");
