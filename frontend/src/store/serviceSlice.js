@@ -3,7 +3,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:5002/api/serv'; // Adjusted the base API URL
+const apiUrl = `${process.env.REACT_BACKEND_API}/api/serv`; // Adjusted the base API URL
 
 // Fetch all services (with optional filters)
 export const fetchAllServices = createAsyncThunk('shop/fetchAllServices', async (filters, { rejectWithValue }) => {

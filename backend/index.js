@@ -27,15 +27,13 @@ connectDB();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:3000',  // Allow only your frontend to make requests
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],  // Allow specific HTTP methods
-    credentials: true,  // Allow cookies to be sent
-    allowedHeaders: ['Authorization', 'Content-Type']  // Allow specific headers
+    origin: `${process.env.REACT_FRONTEND_API}`,  
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],  
+    credentials: true, 
+    allowedHeaders: ['Authorization', 'Content-Type'] 
 }));
 
 app.use(passport.initialize());
-// Remove passport session middleware
-// app.use(passport.session());
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -50,5 +48,5 @@ app.use("/api/appointments", appointmentRouter);
 
 app.listen(port, () => {
     console.log('Server is running at port ' + port);
-    initCronJobs(); // Initialize cron jobs when server starts
+    initCronJobs(); 
 });
