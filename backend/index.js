@@ -28,12 +28,14 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     origin: `${process.env.REACT_FRONTEND_API}`,  
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],  
-    credentials: true, 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],  // Allow specific HTTP methods
+    credentials: true,  // Allow cookies to be sent
     allowedHeaders: ['Authorization', 'Content-Type'] 
 }));
 
 app.use(passport.initialize());
+// Remove passport session middleware
+// app.use(passport.session());
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -45,6 +47,15 @@ app.use("/api/cate", CategoryRouter);
 app.use("/api/serv", serviceRouter);
 app.use("/api/razor-pay", paymentRouter);
 app.use("/api/appointments", appointmentRouter);
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+    });
+}
+
 
 app.listen(port, () => {
     console.log('Server is running at port ' + port);
