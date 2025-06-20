@@ -1,34 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import ServiceCards from './ServiceCards';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllApprovedCategories, getAllCategories } from '../../store/categorySlice';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import ServiceCards from "./ServiceCards";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllApprovedCategories } from "../../store/categorySlice";
 
 const ServiceType = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllApprovedCategories());
   }, [dispatch]);
 
-  const service = useSelector(state => state.category.categories);
+  const service = useSelector((state) => state.category.categories);
 
+  const messages = [
+    "Start typing above to find a service!",
+    "Your comfort, our priority. Start searching",
+    "Need help? We’ll connect you to the right people",
+    "Find local services you can trust.",
+  ];
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      index = (index + 1) % messages.length;
+      setActiveCategory(messages[index]);
+    }, 3000);
 
-  const categories = ['All', 'Personal Care', 'Home Services', 'Fashion'];
+    return () => clearInterval(interval);
+  }, []);
 
-  const categoryMap = {
-    'Personal Care': ['Barber'],
-    'Home Services': ['Plumber', 'Electrician'],
-    'Fashion': ['Boutique', 'Shoe Maker']
-  };
-
-  const filteredServices = service.filter(item => {
-    const matchesSearch = item.title && item.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === 'All' || 
-      categoryMap[activeCategory]?.includes(item.title);
-    return matchesSearch && matchesCategory;
+  const filteredServices = service.filter((item) => {
+    const matchesSearch =
+      item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch;
   });
 
   return (
@@ -55,7 +61,12 @@ const ServiceType = () => {
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             </div>
           </div>
@@ -65,24 +76,14 @@ const ServiceType = () => {
       {/* Category Filters */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex flex-wrap justify-center gap-4 mb-8">
-          {categories.map(category => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-6 py-2 rounded-full transition-all ${
-                activeCategory === category
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
+          <h2 className="text-xl text-gray-700 font-semibold text-center mt-4 transition-all duration-500">
+            {activeCategory}
+          </h2>
         </div>
 
         {/* Service Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {service.map(item => (
+          {filteredServices.map((item) => (
             <Link
               key={item.name}
               to={`/${item.name}`}
@@ -108,6 +109,6 @@ const ServiceType = () => {
       </div>
     </div>
   );
-}
+};
 
-export default ServiceType
+export default ServiceType;

@@ -9,6 +9,7 @@ const {
     sendOtp,
     verifyOtp,
     forgotPassword,
+    resetPassword,
 } = require('../controller/user.controller');
 const { protect } = require('../middleware/protect');
 const passport = require('passport');
@@ -70,6 +71,7 @@ userRouter.get('/google/callback',
 userRouter.post("/send-otp", sendOtp); // Route to send OTP
 userRouter.post("/verify-otp", verifyOtp); // Route to verify OTP
 userRouter.post("/forgot-password", forgotPassword); // Route for forgot password
+userRouter.put("/resetPassword/:token",resetPassword);
 
 userRouter.get("/",protect('admin'), getAllUsers);
 userRouter.put("/:id",protect('user'), updateUser); // Route for updating user

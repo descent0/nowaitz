@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../model/user.model");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const sendEmail = require("../lib/sendEmail");
 
 const signup = async (req, res) => {
   const { name, email, phone, address, password } = req.body;
@@ -145,30 +146,61 @@ const forgotPassword = async (req, res) => {
     user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
     await user.save();
 
-    const resetUrl = `http://localhost:3000/resetPassword/${resetToken}`;
+    const resetUrl = `${process.env.REACT_FRONTEND_API}/resetPassword/${resetToken}`;
     const message = `You requested a password reset. Please use the following link: ${resetUrl}`;
-
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-
-    await transporter.sendMail({
-      from: process.env.EMAIL,
-      to: email,
-      subject: "Password Reset",
+sendEmail({
+      to: user.email,
+      subject: "Password Reset Request",
       text: message,
+      html: `<p>${message}</p>`,
     });
-
     res.status(200).json({ message: "Password reset email sent" });
   } catch (error) {
     console.error("Forgot Password Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+const resetPassword = async (req, res) => {
+  console.log("Reset Password Request:", req.params.token, req.body);
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  try {
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+    console.log("User found for reset:", user);
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+    console.log("Resetting password for user:", user.email);
+    if (!req.body.password || req.body.password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters long",
+      });
+    }
+    const password= req.body.password;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    console.log("Hashed Password:", hashedPassword);
+
+    user.password = hashedPassword; 
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.status(200).json({ message: "Password has been reset" });
+  } catch (error) {
+    console.error("Reset Password Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 
 const verifyEmail = async (req, res) => {
   const { token } = req.params;
@@ -239,6 +271,7 @@ const updateUser = async (req, res) => {
 
 const sendOtp = async (req, res) => {
   const { email } = req.body;
+  console.log("Sending OTP to:", email);
   try {
     const user = await User.findOne({ email });
    if(user && user.isVerified) {
@@ -337,6 +370,7 @@ module.exports = {
   getAllUsers,
   refreshToken,
   forgotPassword,
+  resetPassword,
   verifyEmail,
   updateUser,
   sendOtp,

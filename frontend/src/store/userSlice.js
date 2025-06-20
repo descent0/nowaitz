@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // API base URL
-const API_URL = `${process.env.REACT_BACKEND_API}/api/auth`;
+const API_URL = `${process.env.REACT_APP_BACKEND_API}/api/auth`;
 
 // Async thunk for signup
 export const signupUser = createAsyncThunk('auth/signupUser', async (userData, { rejectWithValue }) => {
@@ -125,7 +125,7 @@ export const sendOtp = createAsyncThunk('auth/sendOtp', async (email, { rejectWi
   try {
     const response = await axios.post(`${API_URL}/send-otp`, { email }, { withCredentials: true });
     console.log("response data" + response);
-    return response.data; // <-- Only return serializable data
+    return response.data; 
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'Failed to send OTP';
     console.log("error again happendes");
@@ -140,6 +140,28 @@ export const verifyOtp = createAsyncThunk('auth/verifyOtp', async (data, { rejec
     return response.data;
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'Failed to verify OTP';
+    return rejectWithValue(errorMessage);
+  }
+});
+
+export const forgotPassword=createAsyncThunk('auth/forgot-password', async (email, { rejectWithValue }) => {
+  try {
+    const response = await axios.post(`${API_URL}/forgot-password`, { email }, { withCredentials: true });
+    return response.data;
+  } catch (error) {  
+    const errorMessage = error.response?.data?.message || 'Failed to send forgot password email';
+    return rejectWithValue(errorMessage);
+  }
+});
+
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',async (data, { rejectWithValue }) => {
+    const {token,password}= data;
+  try {
+   const response = await axios.put(`${API_URL}/resetPassword/${token}`, { password })
+    return response.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || 'Failed to reset password';
     return rejectWithValue(errorMessage);
   }
 });
@@ -239,6 +261,32 @@ const authUserSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(sendOtp.rejected, (state, action) => {
+        state.otpLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(forgotPassword.pending, (state) => {
+        state.otpLoading = true;
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.otpLoading = false;
+        state.otpSent = true;
+        state.message = action.payload.message;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.otpLoading = false;
+        state.error = action.payload;
+      })
+
+      // Reset Password
+      .addCase(resetPassword.pending, (state) => {
+        state.otpLoading = true;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.otpLoading = false;
+        state.emailVerified = true;
+        state.message = action.payload.message;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
         state.otpLoading = false;
         state.error = action.payload;
       })

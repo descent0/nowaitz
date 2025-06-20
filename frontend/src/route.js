@@ -33,6 +33,7 @@ import RegisterShopForm from "./Components/utilComp/RegisterShopRequest";
 import HomeShop from "./Components/ServiceMan/HomeShop";
 import ShopLook from "./Components/ServiceMan/ShopLook";
 import PendingRequest from "./Components/ServiceMan/PendingRequest";
+import ResetPassword from "./Components/Authentication/ResetPassword";
 
 
 // ✅ 1. Global Auth Checker — runs only once here
@@ -147,8 +148,8 @@ const routes = createBrowserRouter([
     ),
   },
   {
-    path: "/passReset",
-    element: <div>Email link to reset password</div>,
+    path: "/resetPassword/:token",
+    element: <ResetPassword/>,
   },
 ]);
 

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = `${process.env.REACT_BACKEND_API}/api/sche`; 
+const API_URL = `${process.env.REACT_APP_BACKEND_API}/api/sche`; 
 
 // Fetch all schedules
 export const fetchSchedules = createAsyncThunk("schedules/fetchAll", async (_, thunkAPI) => {

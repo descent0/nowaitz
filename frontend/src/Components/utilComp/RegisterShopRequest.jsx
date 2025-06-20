@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { registerShop } from '../../store/shopSlice';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterShopForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     location: '',
@@ -172,11 +174,14 @@ const RegisterShopForm = () => {
       const formDataToSubmit = prepareFormData();
       const res = await dispatch(registerShop(formDataToSubmit)).unwrap();
       console.log('Response:', res);
-      
       if (res.error) {
         throw new Error(res.error.message || 'Registration failed');
       }
-      
+        alert('Shop registered successfully! You can login once verified, We will notify you via email once approved.');
+      setTimeout(()=>{
+navigate('/', { replace: true });
+      }, 2000);
+        
       // Reset form on success
       setFormData({
         name: '',

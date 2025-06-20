@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Base URL for API requests
-const API_BASE_URL = `${process.env.REACT_BACKEND_API}/api/razor-pay`;
+const API_BASE_URL = `${process.env.REACT_APP_BACKEND_API}/api/razor-pay`;
 
 // 🔹 Create a new Razorpay order
 export const createOrder = createAsyncThunk(

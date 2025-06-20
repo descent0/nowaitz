@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const apiUrl = `${process.env.REACT_BACKEND_API}/api/cate`;
+const apiUrl = `${process.env.REACT_APP_BACKEND_API}/api/cate`;
 
 export const getAllCategories = createAsyncThunk(
   "category/getAllCategories",

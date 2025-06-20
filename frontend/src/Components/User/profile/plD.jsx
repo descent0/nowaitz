@@ -33,7 +33,7 @@ function PersonalDetails() {
         <div className="absolute -bottom-16 inset-x-0 flex justify-center">
           <div className="w-32 h-32 rounded-full ring-4 ring-white overflow-hidden shadow-xl">
             <img 
-              src={user.profilePicture || "https://via.placeholder.com/150"} 
+              src={user.profilePicture || `https://placehold.co/150x150?text=${user?.name ? user.name.replace(' ', '')[0]?.toUpperCase():'' }&font=bold`} 
               alt={user?.name ? user.name.replace(' ', '')[0]?.toUpperCase() : ''} 
               className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
             />

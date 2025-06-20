@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Base URL for API
-const API_URL = `${process.env.REACT_BACKEND_API}/api/appointments`;
+const API_URL = `${process.env.REACT_APP_BACKEND_API}/api/appointments`;
 
 // Async thunks for CRUD operations
 

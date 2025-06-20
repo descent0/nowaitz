@@ -329,6 +329,7 @@ const handleRequest = async (req, res) => {
             
             // Update appointment status before sending email
             appointment.requestStatus = 'Approved';
+            appointment.status = 'Cancelled';
             await appointment.save();
             
             // Send email notification for approved cancellation

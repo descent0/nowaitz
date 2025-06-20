@@ -3,6 +3,7 @@ const { generateToken } = require("../lib/jwtgen");
 const ServiceShop = require("../model/shop.model");
 const { createCategory } = require("../lib/createCategory");
 const Category = require("../model/category.model");
+const path = require('path');
 
 
 
@@ -57,7 +58,10 @@ const registerShop = async (req, res) => {
     }
 
     // Process images
-    const images = req.files ? req.files.map(file => file.path) : [];
+   const images = req.files
+  ? req.files.map(file => `${process.env.BACKEND_URL}/uploads/${path.basename(file.path)}`)
+  : [];
+  console.log("Processed images:", images);
 
     // Create shop
     const shopID = `SHOP-${Date.now()}`;
@@ -111,7 +115,7 @@ const loginShop = async (req, res) => {
   console.log(shopID);
   try {
     const shop = await ServiceShop.findOne({ shopID });
-    if (!shop) {
+    if (!shop|| shop.status !== "Active") {
       return res.status(404).json({ message: "Shop not found." });
     }
     console.log(shop);

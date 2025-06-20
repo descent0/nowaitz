@@ -1,8 +1,8 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, sendOtp } from './../../store/userSlice';
+import { forgotPassword, loginUser, sendOtp } from './../../store/userSlice';
 import { motion } from 'framer-motion';
 
 const LoginPage = () => {
@@ -11,28 +11,44 @@ const LoginPage = () => {
   const [shopID, setShopID] = useState('');
   const [userType, setUserType] = useState('user');
   const [errorMessage, setErrorMessage] = useState('');
+  const [localErrorVisible, setLocalErrorVisible] = useState(false);
+  const [reduxErrorVisible, setReduxErrorVisible] = useState(false);
+  const [messageVisible, setMessageVisible] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {user}=useSelector((state) => state.authUser);
+  const { user, error, message } = useSelector((state) => state.authUser);
 
-  const handleUserLogin = async (e) => {
+  useEffect(() => {
+    let timer;
+    if (errorMessage) {
+      setLocalErrorVisible(true);
+      timer = setTimeout(() => setLocalErrorVisible(false), 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [errorMessage]);
+
+  useEffect(() => {
+    let errorTimer, messageTimer;
+    if (error) {
+      setReduxErrorVisible(true);
+      errorTimer = setTimeout(() => setReduxErrorVisible(false), 5000);
+    }
+    if (message) {
+      setMessageVisible(true);
+      messageTimer = setTimeout(() => setMessageVisible(false), 5000);
+    }
+    return () => {
+      clearTimeout(errorTimer);
+      clearTimeout(messageTimer);
+    };
+  }, [error, message]);
+
+  const handleUserLogin = (e) => {
     e.preventDefault();
     setErrorMessage('');
-    try {
-      const userData = { email, password };
-      dispatch(loginUser(userData));
-      if(user?.role === 'admin') {
-        navigate('/adminDashBoard', { replace: true });
-      } else if(user?.role === 'moderator') {
-        navigate('/moderatorDashBoard', { replace: true });
-      } else {
-     navigate('/', { replace: true });
-      }
-    } catch (error) {
-      setErrorMessage(error.response?.data?.message || 'Something went wrong. Please try again.');
-      setEmail('');
-      setPassword('');
-    }
+    const userData = { email, password };
+    dispatch(loginUser(userData));
   };
 
   const handleServiceManLogin = async (e) => {
@@ -46,7 +62,9 @@ const LoginPage = () => {
       });
       navigate('/shopDashBoard', { replace: true });
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || 'Something went wrong. Please try again.');
+      setErrorMessage(
+        error.response?.data?.message || 'Something went wrong. Please try again.'
+      );
       setShopID('');
       setPassword('');
     }
@@ -62,15 +80,16 @@ const LoginPage = () => {
       `width=${width},height=${height},top=${top},left=${left}`
     );
 
-    // Listen for message from popup
-    window.addEventListener('message', (event) => {
-      if (event.origin !== 'http://localhost:5002') return;
-      if (event.data && event.data.user) {
-        // Save user to Redux or localStorage as needed
-        // dispatch(loginUserSuccess(event.data.user));
-        navigate('/', { replace: true });
-      }
-    }, { once: true });
+    window.addEventListener(
+      'message',
+      (event) => {
+        if (event.origin !== 'http://localhost:5002') return;
+        if (event.data && event.data.user) {
+          navigate('/', { replace: true });
+        }
+      },
+      { once: true }
+    );
   };
 
   const handleForgotPassword = () => {
@@ -78,9 +97,17 @@ const LoginPage = () => {
       alert('Please enter your email to reset your password.');
       return;
     }
-    dispatch(sendOtp(email));
-    alert('OTP sent to your email for password recovery.');
+    dispatch(forgotPassword(email));
+    alert(
+      'A reset link has been sent to your email if it exists in our records.'
+    );
   };
+
+  useEffect(() => {
+    if (user?.role === 'admin') navigate('/adminDashBoard', { replace: true });
+    else if (user?.role === 'moderator') navigate('/moderatorDashBoard', { replace: true });
+    else if (user) navigate('/', { replace: true });
+  }, [user, navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center px-4">
@@ -131,7 +158,11 @@ const LoginPage = () => {
               type={userType === 'user' ? 'email' : 'text'}
               id={userType === 'user' ? 'email' : 'shopID'}
               value={userType === 'user' ? email : shopID}
-              onChange={(e) => (userType === 'user' ? setEmail(e.target.value) : setShopID(e.target.value))}
+              onChange={(e) =>
+                userType === 'user'
+                  ? setEmail(e.target.value)
+                  : setShopID(e.target.value)
+              }
               required
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
               placeholder={userType === 'user' ? 'you@example.com' : 'Shop ID'}
@@ -152,7 +183,17 @@ const LoginPage = () => {
             />
           </div>
 
-          {errorMessage && <div className="text-red-500 text-sm">{errorMessage}</div>}
+          {localErrorVisible && errorMessage && (
+            <div className="text-red-500 text-sm">{errorMessage}</div>
+          )}
+
+          {reduxErrorVisible && error && (
+            <div className="text-red-600 text-sm text-center mt-2">❌ {error}</div>
+          )}
+
+          {messageVisible && message && !error && (
+            <div className="text-green-600 text-sm text-center mt-2">✅ {message}</div>
+          )}
 
           <motion.button
             type="submit"
