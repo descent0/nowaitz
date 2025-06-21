@@ -47,20 +47,7 @@ const getAllAppointments = async (req, res) => {
     }
 };
 
-// Update payment details
-const updatePayment = async (req, res) => {
-    try {
-        const { paymentStatus, razorpayPaymentId, razorpaySignature } = req.body;
-        const appointment = await Appointment.findByIdAndUpdate(
-            req.params.id,
-            { paymentStatus, razorpayPaymentId, razorpaySignature },
-            { new: true }
-        );
-        res.json(appointment);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+
 
 // Handle appointment status changes
 const updateStatus = async (req, res) => {
@@ -77,20 +64,7 @@ const updateStatus = async (req, res) => {
     }
 };
 
-// Add or update feedback
-const handleFeedback = async (req, res) => {
-    try {
-        const { customerFeedback, feedbackRating } = req.body;
-        const appointment = await Appointment.findByIdAndUpdate(
-            req.params.id,
-            { customerFeedback, feedbackRating },
-            { new: true }
-        );
-        res.json(appointment);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+
 
 // Handle cancellation
 const cancelAppointment = async (req, res) => {
@@ -106,84 +80,6 @@ const cancelAppointment = async (req, res) => {
             { new: true }
         );
         res.json(appointment);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-const requestByCustomer= async(req, res) => {
-    try {
-        const { customerId } = req.params;
-        const { status, paymentStatus, shop } = req.query;
-        let query = { customer: customerId };
-        if (status) query.status = status;
-        if (paymentStatus) query.paymentStatus = paymentStatus;
-        if (shop) query.shop = shop;
-        const appointments = await Appointment.find(query)
-
-
-            .populate('customer')
-            .populate('shop')
-            .populate('service')
-            .populate('schedule')
-            .sort({ createdAt: -1 });
-        res.json(appointments);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Get appointments by query parameters
-const queryAppointments = async (req, res) => {
-    try {
-        const query = {};
-        if (req.query.status) query.status = req.query.status;
-        if (req.query.paymentStatus) query.paymentStatus = req.query.paymentStatus;
-        if (req.query.shop) query.shop = req.query.shop;
-        if (req.query.customer) query.customer = req.query.customer;
-
-        const appointments = await Appointment.find(query)
-            .populate('customer')
-            .populate('shop')
-            .populate('service')
-            .populate('schedule')
-            .sort({ createdAt: -1 });
-        res.json(appointments);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Handle appointment reminders
-const handleReminder = async (req, res) => {
-    try {
-        const appointment = await Appointment.findByIdAndUpdate(
-            req.params.id,
-            { 
-                reminderSent: true,
-                reminderDate: new Date()
-            },
-            { new: true }
-        );
-        res.json(appointment);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Get appointments statistics
-const getStatistics = async (req, res) => {
-    try {
-        const stats = await Appointment.aggregate([
-            {
-                $group: {
-                    _id: '$status',
-                    count: { $sum: 1 },
-                    totalAmount: { $sum: '$totalAmount' }
-                }
-            }
-        ]);
-        res.json(stats);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -447,13 +343,8 @@ module.exports = {
     createAppointment,
     getAppointment,
     getAllAppointments,
-    updatePayment,
     updateStatus,
-    handleFeedback,
     cancelAppointment,
-    queryAppointments,
-    handleReminder,
-    getStatistics,
     getUserAppointments,
     getShopAppointments,
     requestChange,

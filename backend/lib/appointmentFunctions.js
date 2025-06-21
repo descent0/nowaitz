@@ -2,10 +2,10 @@ const axios = require('axios');
 
 
 const Razorpay = require('razorpay');
-const { sendSMS, sanitizeAppointment } = require('../lib/sendSms');
 const Appointment = require('../model/appointment.model');
 const { Schedule } = require('../model/schedule.model');
 const sendEmail = require('./sendEmail');
+const { sanitizeAppointment } = require('./sanitise');
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
@@ -63,13 +63,11 @@ const createAppointment = async (appointmentData) => {
     await appointment.save();
     console.log("scheduling BRO ",appointmentData.schedule);
     const result = await Schedule.updateMany(
-        { _id: { $in: appointment.schedule } }, // Filter: Match documents with `_id` in the array
-        { $set: { isBooked: true } } // Update: Set age to 30
+        { _id: { $in: appointment.schedule } }, 
+        { $set: { isBooked: true } } 
     );
     console.log(result);
 
-//     const populatedAppointment = await appointment.populate('customer shop service schedule');
-// console.log("POPPAP"+populatedAppointment);
     return sanitizeAppointment(appointment);
 };
 

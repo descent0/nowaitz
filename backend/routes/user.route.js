@@ -55,7 +55,8 @@ userRouter.get('/google/callback',
                         role: req.user.role,
                         message: "Google login successful"
                     })} },
-                    "http://localhost:5173"
+                    
+                    "${process.env.REACT_FRONTEND_API}",
                   );
                   window.close();
                 </script>

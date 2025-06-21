@@ -180,15 +180,36 @@ const RegisterShopForm = () => {
         alert('Shop registered successfully! You can login once verified, We will notify you via email once approved.');
       setTimeout(()=>{
 navigate('/', { replace: true });
-      }, 2000);
+      }, 1000);
         
       // Reset form on success
       setFormData({
-        name: '',
-        location: '',
-        contact: { phone: '', email: '' },
-        // ... reset other fields
-      });
+  name: '',
+  location: '',
+  contact: {
+    phone: '',
+    email: ''
+  },
+  operatingHours: {
+    weekdays: '',
+    weekends: ''
+  },
+  category: '',
+  socialMedia: {
+    facebook: '',
+    instagram: '',
+    twitter: '',
+    website: ''
+  },
+  images: [],
+  locationCoordinates: {
+    latitude: '',
+    longitude: ''
+  },
+  emergencyContact: '',
+  password: ''
+});
+
       setConfirmPass('');
     } catch (err) {
       console.error('Error:', err);

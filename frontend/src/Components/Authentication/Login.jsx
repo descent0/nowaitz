@@ -75,21 +75,19 @@ const LoginPage = () => {
     const left = window.screen.width / 2 - width / 2;
     const top = window.screen.height / 2 - height / 2;
     const googleWindow = window.open(
-      'http://localhost:5002/api/auth/google',
-      'Google Login',
-      `width=${width},height=${height},top=${top},left=${left}`
+        `${process.env.REACT_APP_BACKEND_API}/api/auth/google`,
+        'Google Login',
+        `width=${width},height=${height},top=${top},left=${left}`
     );
 
-    window.addEventListener(
-      'message',
-      (event) => {
-        if (event.origin !== 'http://localhost:5002') return;
-        if (event.data && event.data.user) {
-          navigate('/', { replace: true });
+    const pollTimer = setInterval(() => {
+        if (googleWindow.closed) {
+            clearInterval(pollTimer);
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1000);
         }
-      },
-      { once: true }
-    );
+    }, 500);
   };
 
   const handleForgotPassword = () => {

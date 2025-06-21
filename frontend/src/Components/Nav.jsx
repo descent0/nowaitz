@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Loading from "./loading";
-import { logoutUser } from "../store/userSlice";
+import { checkAuthStatus, logoutUser } from "../store/userSlice";
 import { registerShop } from "./../store/shopSlice";
 
 const Nav = () => {
@@ -20,7 +20,9 @@ const Nav = () => {
     e.preventDefault();
     try {
       dispatch(logoutUser());
-      navigate("/login", { replace: true });
+      setTimeout(()=>{
+navigate("/login", { replace: true })
+      }, 1000);
     } catch (error) {
       console.log("Error calling server:", error);
     }
@@ -37,6 +39,7 @@ const Nav = () => {
   };
 
   useEffect(() => {
+    dispatch(checkAuthStatus());
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);

@@ -8,13 +8,7 @@ appointmentRouter.post('/', appointmentController.createAppointment);
 appointmentRouter.get('/fetchAllAppointment', appointmentController.getAllAppointments);
 appointmentRouter.get('/:id', appointmentController.getAppointment);
 
-
-
-appointmentRouter.patch('/:id/payment', appointmentController.updatePayment);
-
-
 appointmentRouter.patch('/:id/status', appointmentController.updateStatus);
-appointmentRouter.post('/:id/feedback', appointmentController.handleFeedback);
 
 
 appointmentRouter.post('/:id/cancel', appointmentController.cancelAppointment);
@@ -25,14 +19,8 @@ appointmentRouter.get('/user/:userId', appointmentController.getUserAppointments
 appointmentRouter.get('/shop/:shopId', appointmentController.getShopAppointments);
 
 
-appointmentRouter.get('/stats/all', appointmentController.getStatistics);
 
 
-
-appointmentRouter.get('/query', appointmentController.queryAppointments);
-
-
-appointmentRouter.patch('/:id/reminder', appointmentController.handleReminder);
 
 
 appointmentRouter.post('/:id/request',protect('user'), appointmentController.requestChange);

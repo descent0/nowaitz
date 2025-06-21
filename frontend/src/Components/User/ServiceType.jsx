@@ -92,7 +92,7 @@ const ServiceType = () => {
               <ServiceCards
                 title={item.name}
                 description={item.description}
-                imageLink={"https://placehold.co/600x400?text=" + item.name}
+                imageLink={!item.image?"https://placehold.co/600x400?text=" + item.name:item.image}
               />
             </Link>
           ))}

@@ -98,71 +98,6 @@ const verifyPayment = async (req, res) => {
 };
 
 /**
- * @desc Capture an authorized payment
- */
-const capturePayment = async (req, res) => {
-  try {
-    const { payment_id, amount } = req.body;
-
-    if (!payment_id || !amount) {
-      return res.status(400).json({ success: false, error: "Payment ID and amount required" });
-    }
-
-    const capture = await razorpayInstance.payments.capture(payment_id, amount * 100, "INR");
-    return res.status(200).json({ success: true, data: capture });
-  } catch (error) {
-    console.error("Error capturing payment:", error);
-    return res.status(500).json({ success: false, error: "Failed to capture payment" });
-  }
-};
-
-/**
- * @desc Cancel an authorized payment (only possible before capture)
- */
-const cancelPayment = async (req, res) => {
-  try {
-    const { payment_id } = req.body;
-
-    if (!payment_id) {
-      return res.status(400).json({ success: false, error: "Payment ID required" });
-    }
-
-    const payment = await razorpayInstance.payments.fetch(payment_id);
-
-    if (payment.status !== "authorized") {
-      return res.status(400).json({ success: false, error: "Only authorized payments can be canceled" });
-    }
-
-    const canceledPayment = await razorpayInstance.payments.cancel(payment_id);
-    return res.status(200).json({ success: true, data: canceledPayment });
-  } catch (error) {
-    console.error("Error canceling payment:", error);
-    return res.status(500).json({ success: false, error: "Failed to cancel payment" });
-  }
-};
-
-/**
- * @desc Refund a captured payment (full or partial)
- */
-const refundPayment = async (req, res) => {
-  try {
-    const { payment_id, amount } = req.body;
-
-    if (!payment_id) {
-      return res.status(400).json({ success: false, error: "Payment ID required" });
-    }
-
-    const refundOptions = amount ? { amount: amount * 100 } : {};
-    const refund = await razorpayInstance.payments.refund(payment_id, refundOptions);
-
-    return res.status(200).json({ success: true, data: refund });
-  } catch (error) {
-    console.error("Error processing refund:", error);
-    return res.status(500).json({ success: false, error: "Failed to process refund" });
-  }
-};
-
-/**
  * @desc Fetch order details
  */
 const fetchOrder = async (req, res) => {
@@ -222,9 +157,6 @@ const fetchRefund = async (req, res) => {
 module.exports = {
   createOrder,
   verifyPayment,
-  capturePayment,
-  cancelPayment,
-  refundPayment,
   fetchOrder,
   fetchPayment,
   fetchRefund,

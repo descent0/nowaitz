@@ -7,18 +7,19 @@ passport.use(new GoogleStrategy(
   {
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: 'http://localhost:5002/api/auth/google/callback'
+    callbackURL: process.env.REDIRECT_URI
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
       let user = await User.findOne({ email: profile.emails[0].value });
-
+      console.log("1st one");
       if (!user) {
         user = await User.create({
           name: profile.displayName,
           email: profile.emails[0].value,
           googleId: profile.id,
-          profilePicture: profile.photos[0].value
+          profilePicture: profile.photos[0].value,
+          isVerified:true
         });
       }
 

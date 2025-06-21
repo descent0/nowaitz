@@ -8,14 +8,6 @@ paymentRouter.post("/order",protect('user'), createOrder);
 
 paymentRouter.post("/payment/verify",protect('user'), verifyPayment);
 
-paymentRouter.post("/payment/capture",protect('user'), capturePayment);
-
-
-paymentRouter.post("/payment/cancel",protect('user'), cancelPayment);
-
-paymentRouter.post("/payment/refund",protect('user'), refundPayment);
-
-
 paymentRouter.get("/order/:order_id",protect('user'), fetchOrder);
 
 

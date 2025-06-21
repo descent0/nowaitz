@@ -59,7 +59,7 @@ const registerShop = async (req, res) => {
 
     // Process images
    const images = req.files
-  ? req.files.map(file => `${process.env.BACKEND_URL}/uploads/${path.basename(file.path)}`)
+  ? req.files.map(file => `${process.env.BASE_URL}/uploads/${path.basename(file.path)}`)
   : [];
   console.log("Processed images:", images);
 

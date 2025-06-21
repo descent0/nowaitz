@@ -13,7 +13,6 @@ const employeeRouter = require('./routes/employee.route');
 const scheduleRouter = require('./routes/schedule.route');
 const paymentRouter = require('./routes/payment.route');
 const cron = require("node-cron");
-const { updateDailySchedules } = require('./lib/autoGenSchedule');
 const CategoryRouter = require('./routes/category.route');
 const path = require('path');
 const { initCronJobs } = require('./config/cron');
@@ -34,9 +33,6 @@ app.use(cors({
 }));
 
 app.use(passport.initialize());
-// Remove passport session middleware
-// app.use(passport.session());
-
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/api/auth", userRouter);

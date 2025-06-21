@@ -3,14 +3,14 @@ const User = require("../model/user.model");
 
 const protect = (...allowedRoles) => async (req, res, next) => {
   try {
-    const token = req.cookies.jwt;  // Corrected to req.cookies.jwt
+    const token = req.cookies.jwt; 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized - No Token" });
     }
    console.log(allowedRoles);
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);  // JWT verification
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); 
 
-    // Find the user by decoded userId and exclude password
+  
     const user = await User.findById(decoded.Id).select("-password");
     
     if (!user) {
