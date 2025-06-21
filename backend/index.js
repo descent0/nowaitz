@@ -27,8 +27,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     origin: `${process.env.REACT_FRONTEND_API}`,  
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],  // Allow specific HTTP methods
-    credentials: true,  // Allow cookies to be sent
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],  
+    credentials: true,  
     allowedHeaders: ['Authorization', 'Content-Type'] 
 }));
 

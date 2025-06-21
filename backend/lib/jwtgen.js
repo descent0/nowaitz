@@ -10,8 +10,9 @@ const generateToken = (Id,role, res) => {
     if (res && res.cookie) {
         res.cookie("jwt", token, {
             httpOnly: true,
-            maxAge: 1000 * 60 * 60, // 1 hour in milliseconds
-            sameSite: "strict",
+            maxAge: 4000 * 60 * 60, // 1 hour in milliseconds
+            sameSite: "None",
+            secure: true,   
         });
     } else {
         console.error("Response object is not defined or does not have a cookie method");
