@@ -56,7 +56,7 @@ const LoginPage = () => {
     setErrorMessage('');
     try {
       const shopData = { shopID, password };
-      await axios.post('http://localhost:5002/api/shop/login', shopData, {
+      await axios.post(`${process.env.REACT_APP_BACKEND_API}/api/shop/login`, shopData, {
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' },
       });
