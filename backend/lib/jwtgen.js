@@ -10,7 +10,7 @@ const generateToken = (Id,role, res) => {
     if (res && res.cookie) {
         res.cookie("jwt", token, {
             httpOnly: true,
-            maxAge: 4000 * 60 * 60, // 1 hour in milliseconds
+            maxAge: 1000 * 60 * 60, 
             sameSite: "None",
             secure: true,   
         });
