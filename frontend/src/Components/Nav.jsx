@@ -38,7 +38,6 @@ const Nav = () => {
   };
 
   useEffect(() => {
-    dispatch(checkAuthStatus());
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
