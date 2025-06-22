@@ -15,17 +15,16 @@ const Nav = () => {
 
   const menuRef = useRef(null);
   const profileRef = useRef(null);
-const handleUserLogout = async (e) => {
+
+  const handleUserLogout = async (e) => {
   e.preventDefault();
   try {
-    await dispatch(logoutUser()).unwrap(); 
-    dispatch(resetState());
-    navigate('/login', { replace: true });
+    await dispatch(logoutUser()); 
+    dispatch(resetState());  
   } catch (error) {
     console.log("Error calling server:", error);
   }
 };
-
 
 
   const handleClickOutside = (e) => {
@@ -39,6 +38,7 @@ const handleUserLogout = async (e) => {
   };
 
   useEffect(() => {
+    dispatch(checkAuthStatus());
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);

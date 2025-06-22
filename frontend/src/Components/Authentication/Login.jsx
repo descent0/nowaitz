@@ -2,7 +2,7 @@ import axios from 'axios';
 import  { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkAuthStatus, forgotPassword, loginUser } from './../../store/userSlice';
+import { forgotPassword, loginUser } from './../../store/userSlice';
 import { motion } from 'framer-motion';
 
 const LoginPage = () => {
@@ -21,7 +21,6 @@ const LoginPage = () => {
 
   useEffect(() => {
     let timer;
-     dispatch(checkAuthStatus());
     if (errorMessage) {
       setLocalErrorVisible(true);
       timer = setTimeout(() => setLocalErrorVisible(false), 5000);

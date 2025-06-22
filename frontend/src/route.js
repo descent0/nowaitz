@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkAuthStatus,
+  logoutUser, // Make sure this exists in your userSlice
 } from "./store/userSlice";
 import { checkShop } from "./store/shopSlice";
 import Loading from "./Components/loading";
@@ -44,7 +45,7 @@ const GlobalAuthLoader = ({ children }) => {
   useEffect(() => {
     dispatch(checkAuthStatus()); 
     dispatch(checkShop());
-  }, []);
+  }, [dispatch,isAuthenticated,isShopRegistered]);
 
   if (loading) return <Loading />;
   return children;
@@ -153,6 +154,7 @@ const routes = createBrowserRouter([
   },
 ]);
 
+// ✅ 4. Final Router Export
 export const AppRouter = () => {
   return (
     <GlobalAuthLoader>
