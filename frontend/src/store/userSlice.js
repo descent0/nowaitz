@@ -19,7 +19,6 @@ export const signupUser = createAsyncThunk('auth/signupUser', async (userData, {
 export const loginUser = createAsyncThunk('auth/loginUser', async (userData, { rejectWithValue }) => {
   try {
     const response = await axios.post(`${API_URL}/login`, userData,{withCredentials:true});
-    console.log(response.data);
     return response.data;
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'An error occurred during login';
@@ -30,18 +29,15 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (userData, { r
 // Async thunk for logout
 export const logoutUser = createAsyncThunk('auth/logoutUser', async (_, { rejectWithValue }) => {
   try {
-    console.log("logout called");
     const response = await axios.post(`${API_URL}/logout`,{},{
       withCredentials: true,  
       headers: {
           "Content-Type": "application/json"
       }
   });
-  console.log(response.data);
     return response.data;
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'An error occurred during logout';
-    console.log(errorMessage);
     return rejectWithValue(errorMessage);
   }
 });
@@ -51,18 +47,15 @@ export const checkAuthStatus = createAsyncThunk(
   'auth/checkAuthStatus',
   async (_, { rejectWithValue }) => {
     try {
-      console.log("Checking authentication status...");
       const response = await axios.get(`${API_URL}/checkAuth`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
 
       if (!response.data) {
-        console.log("User not authenticated");
         return rejectWithValue("User not authenticated");
       }
 
-      console.log("Authenticated User:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error in checkAuthStatus:", error);
@@ -81,11 +74,10 @@ export const getAllUsers = createAsyncThunk(
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
         });
-        console.log("response data", JSON.stringify(response.data, null, 2));
       return response.data;
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'An error occurred during fetching all users';
-      console.log(errorMessage);
+    
       return rejectWithValue(errorMessage);
     }
   }
@@ -124,11 +116,9 @@ export const updateUserDetails = createAsyncThunk(
 export const sendOtp = createAsyncThunk('auth/sendOtp', async (email, { rejectWithValue }) => {
   try {
     const response = await axios.post(`${API_URL}/send-otp`, { email }, { withCredentials: true });
-    console.log("response data" + response);
     return response.data; 
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'Failed to send OTP';
-    console.log("error again happendes");
     return rejectWithValue(errorMessage);
   }
 });

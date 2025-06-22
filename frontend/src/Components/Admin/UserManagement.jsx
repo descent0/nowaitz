@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import StatCard from './StatCard'
-import { Activity, Award, Clipboard, Users } from 'lucide-react'
+import {Award, Users } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllUsers } from '../../store/userSlice'
 

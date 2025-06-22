@@ -16,9 +16,6 @@ export const createOrder = createAsyncThunk(
         },
         withCredentials: true,
         });
-        // Assuming backend returns { success: true, data: order }
-        console.log(response.data.appointment);
-        console.log(response.data);
         return response.data.data;
         
         

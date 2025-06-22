@@ -11,7 +11,7 @@ const loadRazorpayScript = () => {
     razorpayScriptPromise = new Promise((resolve, reject) => {
       if (window.Razorpay) return resolve();
       const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.src = `${process.env.REACT_APP_RAZORPAY_SCRIPT_SRC}`;
       script.async = true;
       script.onload = () => resolve();
       script.onerror = () => reject(new Error("Failed to load Razorpay SDK"));
@@ -22,7 +22,6 @@ const loadRazorpayScript = () => {
 };
 
 const PaymentComponent = ({ appointmentData }) => {
-  console.log(appointmentData);
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.payment);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);

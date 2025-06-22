@@ -23,7 +23,6 @@ const ShopManagement = () => {
   }, [dispatch]);
 
   const handleUpdateShopStatus = (shopId, status) => {
-    console.log(`Updating shop ${shopId} to status ${status}`);
     dispatch(updateShopStatus({ shop_id: shopId, status }));
   };
 

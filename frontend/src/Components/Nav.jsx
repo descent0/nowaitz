@@ -16,21 +16,11 @@ const Nav = () => {
   const menuRef = useRef(null);
   const profileRef = useRef(null);
 
-  
-useEffect(() => {
-  console.log("User after logout:", user); 
- 
-},[user]);
-
-  
-
   const handleUserLogout = async (e) => {
   e.preventDefault();
   try {
     await dispatch(logoutUser()); 
     dispatch(resetState());  
-    console.log(user);    
-    console.log("Logout successful. User state reset.");
   } catch (error) {
     console.log("Error calling server:", error);
   }

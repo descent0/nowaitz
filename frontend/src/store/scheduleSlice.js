@@ -96,7 +96,6 @@ export const fetchAvailableSchedules = createAsyncThunk("schedules/fetchAvailabl
 // Fetch schedules by date and employee ID
 export const fetchScheduleByDateAndEmployee = createAsyncThunk("schedules/fetchByDateAndEmployee", async ({ date, employeeId }, thunkAPI) => {
   try {
-    console.log(date,employeeId);
     const response = await axios.get(`${API_URL}/date/employee?date=${date}&employeeId=${employeeId}`,{
        headers: {
           "Content-Type": "application/json",

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkShop } from '../../store/shopSlice';
 
 const Settings = () => {
   const [shop, setShop] = useState({
@@ -64,7 +63,7 @@ const Settings = () => {
     }
   }, [shopData]);
   
-  console.log(shop);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name.includes('.')) {
@@ -86,7 +85,7 @@ const Settings = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Updated shop:', shop);
+  
   };
 
   return (

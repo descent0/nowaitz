@@ -301,10 +301,6 @@ const handleBookAppointment=()=>{
             </section>
           )}
 
-        {
-          console.log("selectedSlot",selectedSlot)
-        }
-
           {/* Payment Section */}
           {selectedSlot.length !== 0 && selectedService.length > 0 && (
             <section ref={bookSlotButtonRef} onClick={handleBookAppointment} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">

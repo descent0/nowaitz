@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import StatCard from './StatCard'
 import { Activity, Award, Clipboard, DollarSign, Users } from 'lucide-react'
 import { getAllUsers } from '../../store/userSlice';
@@ -11,7 +11,6 @@ const Overview = () => {
     const users=useSelector(state=>state.authUser.users);
     const shops=useSelector(state=>state.shop.shops);
 
-    console.log(users);
     const userData={
         totalUsers:users.length,
         activeUsers:users.filter(user=>user.status==="active").length,

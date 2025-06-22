@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,7 +10,6 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSelector } from 'react-redux';
 
 // Register ChartJS components

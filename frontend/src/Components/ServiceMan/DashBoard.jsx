@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { checkShop, logoutShop, resetShopState } from '../../store/shopSlice';
 import { getServicesByShopId } from '../../store/serviceSlice';
 import { fetchAppointmentsByShopId } from '../../store/appointmentSlice';
-import Schedule from './Schedule';
-import { logoutUser } from '../../store/userSlice';
+
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -62,7 +61,7 @@ const Dashboard = () => {
         navigate("/login", { replace: true });
       }, 50);
     } catch (error) {
-      console.log("Error during logout:", error);
+
       navigate("/login", { replace: true });
     }
   };
@@ -150,7 +149,6 @@ const Dashboard = () => {
   : [];
 
 
-  console.log("pending appointemnt",pendingUpcomingRequest);
 
   // Safely calculate revenue
   const totalRevenue = todayAppointments.reduce((total, appointment) => 

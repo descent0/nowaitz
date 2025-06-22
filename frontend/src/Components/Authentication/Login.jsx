@@ -1,8 +1,8 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { forgotPassword, loginUser, sendOtp } from './../../store/userSlice';
+import { forgotPassword, loginUser } from './../../store/userSlice';
 import { motion } from 'framer-motion';
 
 const LoginPage = () => {
@@ -30,7 +30,6 @@ const LoginPage = () => {
 
   useEffect(() => {
     let errorTimer, messageTimer;
-    console.log("user in login",user);
     if (error) {
       setReduxErrorVisible(true);
       errorTimer = setTimeout(() => setReduxErrorVisible(false), 5000);

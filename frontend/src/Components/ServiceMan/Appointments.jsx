@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAppointmentsByShopId, updateAppointmentStatus } from '../../store/appointmentSlice';
 import { checkShop } from '../../store/shopSlice';

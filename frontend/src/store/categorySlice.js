@@ -26,14 +26,12 @@ export const getAllApprovedCategories=createAsyncThunk(
   "category/getAllApprovedCategories",
   async (_, { rejectWithValue }) => {
     try {
-      console.log("Inside the slice");
       const response = await axios.get(`${apiUrl}/approved`,{
          headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true,
       });
-      console.log(response.data.categories);
       return response.data.categories;
     } catch (error) {
       return rejectWithValue(

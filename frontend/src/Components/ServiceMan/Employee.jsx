@@ -41,7 +41,6 @@ const Employee = () => {
       setEditingEmployee(null);
     } else {
       dispatch(createEmployee(employeeWithShopId));
-      console.log(employees);
     }
     setEmployeeData({ name: '', email: '', phone: '', type: '', entryTime: '', exitTime: '', slotTime: '' });
     setShowForm(false);

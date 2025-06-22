@@ -151,10 +151,6 @@ const RegisterShopForm = () => {
       });
     }
 
-    // Log the FormData contents for debugging
-    for (let pair of data.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
 
     return data;
   };

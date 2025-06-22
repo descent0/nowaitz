@@ -53,7 +53,6 @@ export const getAllShopByShopId = createAsyncThunk(
         },
         withCredentials: true,
       });
-       console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -72,7 +71,6 @@ export const getAllShops = createAsyncThunk(
         },
         withCredentials: true,
       });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -86,7 +84,6 @@ export const registerShop = createAsyncThunk(
   "shop/registerShop",
   async (formData, { rejectWithValue }) => {
     try {
-      console.log('Sending form data:', formData);
       const response = await axios.post(`${apiUrl}/register`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -106,14 +103,12 @@ export const approveShop = createAsyncThunk(
   "shop/approveShop",
   async (shop_id, { rejectWithValue }) => {
     try {
-      console.log("under rtk " + shop_id);
       const response = await axios.put(`${apiUrl}/approve/${shop_id}`,{
          headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true,
       });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -144,14 +139,12 @@ export const updateShopStatus = createAsyncThunk(
 
 export const logoutShop = createAsyncThunk('auth/logoutShop', async (_, { rejectWithValue }) => {
   try {
-    console.log("logout called");
     const response = await axios.post(`${apiUrl}/logout`,{},{
       withCredentials: true,  
       headers: {
           "Content-Type": "application/json"
       }
   });
-  console.log(response.data);
     return response.data;
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'An error occurred during logout';
@@ -165,11 +158,9 @@ export const updateShopInfo = createAsyncThunk(
   "shop/updateShopInfo",
   async (shopData, { rejectWithValue }) => {
     try {
-      console.log("inside slice called", shopData);
       const response = await axios.put(`${apiUrl}/update`, shopData, {
         withCredentials: true,
       });
-      console.log("inside slicce called 2 ", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(

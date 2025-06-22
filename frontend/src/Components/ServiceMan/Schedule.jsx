@@ -29,7 +29,7 @@ const Schedule = () => {
   useEffect(() => {
     if (selectedDate && selectedEmployee) {
       let date;
-      console.log("Selected date under useEffect:", selectedDate);
+
       if (typeof selectedDate === 'string') {
         const [year, month, day] = selectedDate.split('-').map(Number);
         date = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
@@ -46,7 +46,7 @@ const Schedule = () => {
         return;
       }
   
-      console.log("Adjusted date in UTC:", date.toISOString());
+
   
       dispatch(
         fetchScheduleByDateAndEmployee({

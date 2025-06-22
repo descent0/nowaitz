@@ -59,7 +59,6 @@ export const getEmployeesByShopId = createAsyncThunk(
   "employees/getEmployeesByShopId",
   async (shopId, { rejectWithValue }) => {
     try {
-      console.log("shopId fetching employees", shopId);
       const { data } = await axios.get(`${API_URL}/shop/${shopId}`,{
          headers: {
           "Content-Type": "application/json",

@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import {useRef, useEffect } from 'react';
 import { 
-  Scissors, MapPin, Phone, Instagram, Facebook, Star, 
-  Clock, Menu, X, Mail, Calendar 
+ MapPin, Phone, Instagram, Facebook, Star, 
+  Mail, Calendar 
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getEmployeesByShopId } from '../../store/employeeSlice';
@@ -61,10 +61,8 @@ const Shop = () => {
   const sectionsRef = useRef({});
   const { shop: shopID } = useParams();
   const dispatch = useDispatch();
-  console.log("shopID"+shopID);
   useEffect(() => {
     if (shopID) {
-      console.log("Inside shopID"+shopID);
       dispatch(getAllShopByShopId(shopID));
     }
   }, []);

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import StatCard from './StatCard'
 import DoughnutChart from './DoughnutChart'
-import { Clipboard, DollarSign, Percent } from 'lucide-react'
+import { DollarSign, Percent } from 'lucide-react'
 import { fetchAppointments } from '../../store/appointmentSlice'
 
 const FinancialManagement = () => {
@@ -10,7 +10,7 @@ const FinancialManagement = () => {
   const appointments = useSelector(state => state.appointments.appointments.filter(app => app.status === 'Confirmed' || app.status === 'Completed'));
   const loading = useSelector(state => state.appointments.loading)
   const error = useSelector(state => state.appointments.error)
-  console.log(appointments);
+
 
   useEffect(() => {
     dispatch(fetchAppointments())

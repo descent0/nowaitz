@@ -11,7 +11,6 @@ export const fetchAppointments = createAsyncThunk(
   'appointments/fetchAppointments',
   async (queryParams = {}, { rejectWithValue }) => {
     try {
-      console.log("fetching all appointments");
       const response = await axios.get(`${API_URL}/fetchAllAppointment`,{
          headers: {
           "Content-Type": "application/json",
@@ -102,7 +101,6 @@ export const updateAppointmentStatus = createAsyncThunk(
   'appointments/updateAppointmentStatus',
   async ({ id, status }, { rejectWithValue }) => {
     try {
-      console.log("updateint ")
       const response = await axios.patch(`${API_URL}/${id}/status`, { status },{
          headers: {
           "Content-Type": "application/json",
@@ -157,7 +155,6 @@ export const handleRequest = createAsyncThunk(
   'appointments/handleRequest',
   async ({ id, requestStatus }, { rejectWithValue }) => {
     try {
-      console.log("request status ",requestStatus);
       const response = await axios.post(`${API_URL}/${id}/verify-request`, { requestStatus },{
          headers: {
           "Content-Type": "application/json",
