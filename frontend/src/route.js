@@ -34,6 +34,7 @@ import HomeShop from "./Components/ServiceMan/HomeShop";
 import ShopLook from "./Components/ServiceMan/ShopLook";
 import PendingRequest from "./Components/ServiceMan/PendingRequest";
 import ResetPassword from "./Components/Authentication/ResetPassword";
+import ErrorElement from "./Components/ErrorElement";
 
 
 const GlobalAuthLoader = ({ children }) => {
@@ -44,7 +45,7 @@ const GlobalAuthLoader = ({ children }) => {
   useEffect(() => {
     dispatch(checkAuthStatus()); 
     dispatch(checkShop());
-  }, [dispatch]);
+  }, [dispatch,isAuthenticated,isShopRegistered]);
 
   if (loading) return <Loading />;
   return children;
@@ -83,6 +84,7 @@ const routes = createBrowserRouter([
         <LandingPage />
       </ProtectedRoute>
     ),
+    errorElement:<ErrorElement/>,
     children: [
       { path: "", element: <ServiceType /> },
       { path: ":serviceType", element: <ServiceStores /> },
@@ -97,6 +99,7 @@ const routes = createBrowserRouter([
         <LoginPage />
       </RedirectIfAuthenticated>
     ),
+    errorElement:<ErrorElement/>
   },
   {
     path: "/userRegister",
@@ -105,6 +108,7 @@ const routes = createBrowserRouter([
         <UserRegistrationPage />
       </RedirectIfAuthenticated>
     ),
+    errorElement:<ErrorElement/>
   },
   {
     path: "/profile",
@@ -117,10 +121,12 @@ const routes = createBrowserRouter([
   {
     path: "/registerShop",
     element: <RegisterShopForm />,
+    errorElement:<ErrorElement/>
   },
   {
     path: "/shopDashBoard",
     element: <HomeShop />,
+    errorElement:<ErrorElement/>,
     children: [
       { path: "", element: <DashBoard /> },
       { path: "appointments", element: <Appointments /> },
@@ -139,10 +145,12 @@ const routes = createBrowserRouter([
         <AdminDashBoard />
       </ProtectedRoute>
     ),
+    errorElement:<ErrorElement/>
   },
   {
     path: "/resetPassword/:token",
     element: <ResetPassword/>,
+    errorElement:<ErrorElement/>
   },
 ]);
 
