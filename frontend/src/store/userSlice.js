@@ -48,12 +48,7 @@ export const checkAuthStatus = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/checkAuth`, {
-        headers: { 
-          "Content-Type": "application/json",
-          "Cache-Control": "no-cache, no-store, must-revalidate", // Prevent caching
-          "Pragma": "no-cache",
-          "Expires": "0"
-        },
+        headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
 
@@ -69,6 +64,7 @@ export const checkAuthStatus = createAsyncThunk(
     }
   }
 );
+
 
 export const getAllUsers = createAsyncThunk(
   'auth/getAllUsers',
@@ -86,6 +82,8 @@ export const getAllUsers = createAsyncThunk(
     }
   }
 );
+
+
 
 // Google login callback thunk
 export const googleLoginCallback = createAsyncThunk('auth/googleLoginCallback', async (_, { rejectWithValue }) => {
@@ -158,6 +156,7 @@ export const resetPassword = createAsyncThunk(
   }
 });
 
+
 const initialState = {
   user: null,
   users: [],
@@ -169,108 +168,80 @@ const initialState = {
   message: '',
   otpSent: false,
   emailVerified: false,
-  loading: false, // Add this for compatibility
 };
+
 
 // Auth Slice
 const authUserSlice = createSlice({
   name: 'authUser',
   initialState,
   reducers: {
-    resetState: (state) => {
-      // Clear all auth-related state immediately
-      state.user = null;
-      state.isAuthenticated = false;
-      state.authLoading = false;
-      state.loading = false;
-      state.error = null;
-      state.message = '';
-      state.otpSent = false;
-      state.emailVerified = false;
-    },
-    clearError: (state) => {
-      state.error = null;
-    },
-    clearMessage: (state) => {
-      state.message = '';
-    }
+   resetState: (state) => {
+  state.user = null;
+  state.isAuthenticated = false;
+  state.loading = false;
+  state.error = null;
+}
+
   },
   extraReducers: (builder) => {
     builder
       // Signup
       .addCase(signupUser.pending, (state) => {
         state.authLoading = true;
-        state.loading = true;
-        state.error = null;
       })
       .addCase(signupUser.fulfilled, (state, action) => {
         state.authLoading = false;
-        state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
         state.message = action.payload.message;
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.authLoading = false;
-        state.loading = false;
         state.error = action.payload;
       })
 
       // Login
       .addCase(loginUser.pending, (state) => {
         state.authLoading = true;
-        state.loading = true;
-        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.authLoading = false;
-        state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
         state.message = action.payload.message;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.authLoading = false;
-        state.loading = false;
         state.error = action.payload;
       })
 
       // Logout
       .addCase(logoutUser.pending, (state) => {
         state.authLoading = true;
-        state.loading = true;
       })
       .addCase(logoutUser.fulfilled, (state) => {
-        // Immediately clear all auth state
         state.authLoading = false;
-        state.loading = false;
         state.isAuthenticated = false;
         state.user = null;
         state.message = 'Logout successful';
       })
       .addCase(logoutUser.rejected, (state, action) => {
-        // Even on error, clear auth state (logout should be client-side fail-safe)
         state.authLoading = false;
-        state.loading = false;
-        state.isAuthenticated = false;
-        state.user = null;
         state.error = action.payload;
       })
 
       // Check Auth
       .addCase(checkAuthStatus.pending, (state) => {
         state.authLoading = true;
-        state.loading = true;
       })
       .addCase(checkAuthStatus.fulfilled, (state, action) => {
         state.authLoading = false;
-        state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
       })
       .addCase(checkAuthStatus.rejected, (state, action) => {
         state.authLoading = false;
-        state.loading = false;
         state.isAuthenticated = false;
         state.user = null;
       })
@@ -331,48 +302,40 @@ const authUserSlice = createSlice({
       // Get All Users
       .addCase(getAllUsers.pending, (state) => {
         state.authLoading = true;
-        state.loading = true;
       })
       .addCase(getAllUsers.fulfilled, (state, action) => {
         state.authLoading = false;
-        state.loading = false;
-        state.users = action.payload.users;        
-        state.totalUsers = action.payload.totalUsers; 
+        state.users = action.payload.users;        // <-- store the array
+        state.totalUsers = action.payload.totalUsers; // <-- store the count
       })
       .addCase(getAllUsers.rejected, (state, action) => {
         state.authLoading = false;
-        state.loading = false;
         state.error = action.payload;
       })
       // Google Login Callback
       .addCase(googleLoginCallback.pending, (state) => {
         state.authLoading = true;
-        state.loading = true;
       })
       .addCase(googleLoginCallback.fulfilled, (state, action) =>
         {
           state.authLoading = false;
-          state.loading = false;
           state.isAuthenticated = true;
           state.user = action.payload;
         }
       )
       .addCase(googleLoginCallback.rejected, (state, action) => {
         state.authLoading = false;
-        state.loading = false;
         state.error = action.payload;
       })
       // Update User Details
       .addCase(updateUserDetails.pending, (state) =>
         {
           state.authLoading = true;
-          state.loading = true;
         }
       )
       .addCase(updateUserDetails.fulfilled, (state, action) =>
         {
           state.authLoading = false;
-          state.loading = false;
           state.user = action.payload;
           state.message = action.payload.message;
         }
@@ -380,15 +343,16 @@ const authUserSlice = createSlice({
       .addCase(updateUserDetails.rejected, (state, action) =>
         {
           state.authLoading = false;
-          state.loading = false;
           state.error = action.payload;
         }
       );
+  // Handle any other actions that might not be covered
+  // by the above cases
   }
 });
 
 // Actions
-export const { resetState, clearError, clearMessage } = authUserSlice.actions;
+export const { resetState } = authUserSlice.actions;
 
 // Reducer
 export default authUserSlice.reducer;
