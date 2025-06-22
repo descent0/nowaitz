@@ -37,14 +37,25 @@ userRouter.get('/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: '/login' }),
   async (req, res) => {
     try {
-      await generateToken(req.user._id, "user", res); 
-      return res.redirect(`${process.env.REACT_FRONTEND_API}`);
+      await generateToken(req.user._id, "user", res);
+
+     res.send(`
+  <html>
+    <body>
+      <script>
+        window.opener.postMessage({ success: true }, "${process.env.REACT_FRONTEND_API}");
+        window.close();
+      </script>
+    </body>
+  </html>
+`);
     } catch (err) {
       console.error(err);
-      return res.redirect(`${process.env.REACT_FRONTEND_API}/login?error=oauth`);
+      return res.redirect('${process.env.REACT_FRONTEND_API}/login?error=oauth');
     }
   }
 );
+
 
 
 // New routes for OTP and forgot password

@@ -70,8 +70,20 @@ const LoginPage = () => {
     }
   };
 const handleGoogleLogin = () => {
-  window.location.href = `${process.env.REACT_APP_BACKEND_API}/api/auth/google`;
+  const popup = window.open(
+    `${process.env.REACT_APP_BACKEND_API}/api/auth/google`,
+    "_blank",
+    "width=500,height=600"
+  );
+
+  const interval = setInterval(() => {
+    if (popup?.closed) {
+      clearInterval(interval);
+      window.location.reload(); 
+    }
+  }, 500);
 };
+
 
 
   const handleForgotPassword = () => {
