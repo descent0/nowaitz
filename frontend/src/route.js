@@ -4,7 +4,7 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkAuthStatus,
@@ -40,27 +40,18 @@ const GlobalAuthLoader = ({ children }) => {
   const dispatch = useDispatch();
   const { isAuthenticated, loading, user } = useSelector((state) => state.authUser);
   const { isShopRegistered } = useSelector((state) => state.shop);
-  const hasInitialized = useRef(false);
 
   useEffect(() => {
-    // Only run auth check once on app initialization
-    if (!hasInitialized.current) {
-      dispatch(checkAuthStatus()); 
-      dispatch(checkShop());
-      hasInitialized.current = true;
-    }
-  }, [dispatch]);
-
-  // Separate effect for subsequent auth/shop changes
-  useEffect(() => {
-    if (hasInitialized.current && isAuthenticated) {
-      dispatch(checkShop());
-    }
-  }, [dispatch, isAuthenticated]);
+    dispatch(checkAuthStatus()); 
+    dispatch(checkShop());
+  }, [dispatch,isAuthenticated,isShopRegistered]);
 
   if (loading) return <Loading />;
   return children;
 };
+
+
+
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useSelector((state) => state.authUser);
@@ -76,16 +67,9 @@ const RedirectIfAuthenticated = ({ children }) => {
 
   if (loading) return <Loading />;
 
-  // Add explicit checks to prevent redirect loops
-  if (isAuthenticated && user?.role === 'user') {
-    return <Navigate to="/" replace />;
-  }
-  if (isAuthenticated && user?.role === 'admin') {
-    return <Navigate to="/AdminDashBoard" replace />;
-  }
-  if (isAuthenticated && user?.role === 'serviceman' && isShopRegistered) {
-    return <Navigate to="/shopDashBoard" replace />;
-  }
+  if (isAuthenticated && user?.role === 'user') return <Navigate to="/" replace />;
+  if (isAuthenticated && user?.role === 'admin') return <Navigate to="/AdminDashBoard" replace />;
+  if (isAuthenticated && isShopRegistered) return <Navigate to="/shopDashBoard" replace />;
 
   return children;
 };
