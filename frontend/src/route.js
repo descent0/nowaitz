@@ -44,7 +44,7 @@ const GlobalAuthLoader = ({ children }) => {
   useEffect(() => {
     dispatch(checkAuthStatus()); 
     dispatch(checkShop());
-  }, [dispatch,isAuthenticated,isShopRegistered]);
+  }, []);
 
   if (loading) return <Loading />;
   return children;

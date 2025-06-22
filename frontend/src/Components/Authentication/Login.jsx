@@ -21,7 +21,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     let timer;
-     dispatch(checkAuthStatus);
+     dispatch(checkAuthStatus());
     if (errorMessage) {
       setLocalErrorVisible(true);
       timer = setTimeout(() => setLocalErrorVisible(false), 5000);

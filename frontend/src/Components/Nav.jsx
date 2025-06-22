@@ -15,16 +15,17 @@ const Nav = () => {
 
   const menuRef = useRef(null);
   const profileRef = useRef(null);
-
-  const handleUserLogout = async (e) => {
+const handleUserLogout = async (e) => {
   e.preventDefault();
   try {
-    await dispatch(logoutUser()); 
-    dispatch(resetState());  
+    await dispatch(logoutUser()).unwrap(); 
+    dispatch(resetState());
+    navigate('/login', { replace: true });
   } catch (error) {
     console.log("Error calling server:", error);
   }
 };
+
 
 
   const handleClickOutside = (e) => {
