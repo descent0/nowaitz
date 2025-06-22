@@ -37,13 +37,7 @@ userRouter.get('/google/callback',
     passport.authenticate('google', { session: false, failureRedirect: '/login' }),
     async (req, res) => {
         try {
-            const token = generateToken(req.user._id, "user",res);
-            res.cookie('jwt', token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'Strict'
-            });
-            // Send user data to opener window and close popup
+            await generateToken(req.user._id, "user",res);
             res.send(`
                 <script>
                   window.opener.postMessage(
