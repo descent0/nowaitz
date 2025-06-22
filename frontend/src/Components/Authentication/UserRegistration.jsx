@@ -2,7 +2,6 @@ import  { useState, useEffect } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendOtp, verifyOtp, signupUser, resetState } from '../../store/userSlice';
-import useAuth from '../../utils/checkAuth';
 
 const UserRegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +19,6 @@ const UserRegistrationPage = () => {
   const dispatch = useDispatch();
   const { otpSent, emailVerified, authLoading, otpLoading, error, message } = useSelector((state) => state.authUser || {});
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -129,7 +127,6 @@ const UserRegistrationPage = () => {
     }
   };
 
-  if (isAuthenticated) return <Navigate to="/" replace />;
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center px-4 py-8">

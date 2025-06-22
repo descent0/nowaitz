@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { AppRouter} from "./route";
-import useAuth from "./utils/checkAuth";
 import { Provider } from "react-redux";
 import store from "./store/store";
 
