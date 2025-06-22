@@ -225,7 +225,14 @@ const shopSlice = createSlice({
     error: null,
     isShopRegistered: false,
   },
-  reducers: {},
+  reducers: {
+    resetShopState: (state) => {
+      state.error = null;
+      state.shop = null;
+      state.error = null;
+      state.shops = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Check Shop
@@ -393,5 +400,7 @@ const shopSlice = createSlice({
       });
   },
 });
+
+export const { resetShopState } = shopSlice.actions;
 
 export default shopSlice.reducer;

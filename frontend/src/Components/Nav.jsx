@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Loading from "./loading";
-import { checkAuthStatus, logoutUser } from "../store/userSlice";
+import { checkAuthStatus, logoutUser, resetState } from "../store/userSlice";
 import { registerShop } from "./../store/shopSlice";
 
 const Nav = () => {
@@ -21,6 +21,7 @@ const Nav = () => {
     try {
       dispatch(logoutUser());
       setTimeout(()=>{
+        dispatch(resetState);
 navigate("/login", { replace: true })
       }, 1000);
     } catch (error) {

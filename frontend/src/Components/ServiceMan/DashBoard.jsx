@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { checkShop, logoutShop } from '../../store/shopSlice';
+import { checkShop, logoutShop, resetShopState } from '../../store/shopSlice';
 import { getServicesByShopId } from '../../store/serviceSlice';
 import { fetchAppointmentsByShopId } from '../../store/appointmentSlice';
 import Schedule from './Schedule';
@@ -58,6 +58,7 @@ const Dashboard = () => {
       setShowDropdown(false);
       await dispatch(logoutShop()).unwrap();
       setTimeout(() => {
+        dispatch(resetShopState);
         navigate("/login", { replace: true });
       }, 50);
     } catch (error) {

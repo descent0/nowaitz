@@ -28,7 +28,10 @@ const ServiceType = () => {
       setActiveCategory(messages[index]);
     }, 3000);
 
-    return () => clearInterval(interval);
+    return () =>{ 
+      clearInterval(interval);
+
+    };
   }, []);
 
   const filteredServices = service.filter((item) => {
