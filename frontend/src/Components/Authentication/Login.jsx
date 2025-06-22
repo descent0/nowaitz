@@ -69,26 +69,10 @@ const LoginPage = () => {
       setPassword('');
     }
   };
+const handleGoogleLogin = () => {
+  window.location.href = `${process.env.REACT_APP_BACKEND_API}/api/auth/google`;
+};
 
-  const handleGoogleLogin = () => {
-    const width = 500, height = 600;
-    const left = window.screen.width / 2 - width / 2;
-    const top = window.screen.height / 2 - height / 2;
-    const googleWindow = window.open(
-        `${process.env.REACT_APP_BACKEND_API}/api/auth/google`,
-        'Google Login',
-        `width=${width},height=${height},top=${top},left=${left}`
-    );
-
-    const pollTimer = setInterval(() => {
-        if (googleWindow.closed) {
-            clearInterval(pollTimer);
-            setTimeout(() => {
-                window.location.href = "/";
-            }, 1000);
-        }
-    }, 500);
-  };
 
   const handleForgotPassword = () => {
     if (!email) {

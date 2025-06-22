@@ -34,33 +34,18 @@ userRouter.get("/checkAuth", protect('admin','user'), checkAuth);
 userRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 userRouter.get('/google/callback',
-    passport.authenticate('google', { session: false, failureRedirect: '/login' }),
-    async (req, res) => {
-        try {
-            await generateToken(req.user._id, "user",res);
-            res.send(`
-                <script>
-                  window.opener.postMessage(
-                    { user: ${JSON.stringify({
-                        _id: req.user._id,
-                        fullName: req.user.name,
-                        email: req.user.email,
-                        profilePicture: req.user.profilePicture,
-                        role: req.user.role,
-                        message: "Google login successful"
-                    })} },
-                    
-                    "${process.env.REACT_FRONTEND_API}",
-                  );
-                  window.close();
-                </script>
-            `);
-        } catch (err) {
-            console.error('Error during authentication:', err);
-            res.status(500).json({ message: 'Authentication failed', error: err });
-        }
+  passport.authenticate('google', { session: false, failureRedirect: '/login' }),
+  async (req, res) => {
+    try {
+      await generateToken(req.user._id, "user", res); 
+      return res.redirect(`${process.env.REACT_FRONTEND_API}`);
+    } catch (err) {
+      console.error(err);
+      return res.redirect(`${process.env.REACT_FRONTEND_API}/login?error=oauth`);
     }
+  }
 );
+
 
 // New routes for OTP and forgot password
 userRouter.post("/send-otp", sendOtp); // Route to send OTP

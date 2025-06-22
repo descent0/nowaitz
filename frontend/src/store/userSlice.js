@@ -84,18 +84,6 @@ export const getAllUsers = createAsyncThunk(
 );
 
 
-
-// Google login callback thunk
-export const googleLoginCallback = createAsyncThunk('auth/googleLoginCallback', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axios.get(`${API_URL}/google/callback`, { withCredentials: true });
-    return response.data;
-  } catch (error) {
-    const errorMessage = error.response?.data?.message || 'An error occurred during Google login callback';
-    return rejectWithValue(errorMessage);
-  }
-});
-
 export const updateUserDetails = createAsyncThunk(
   'auth/updateUserDetails',
   async ({ id, userData }, { rejectWithValue }) => {
@@ -312,21 +300,7 @@ const authUserSlice = createSlice({
         state.authLoading = false;
         state.error = action.payload;
       })
-      // Google Login Callback
-      .addCase(googleLoginCallback.pending, (state) => {
-        state.authLoading = true;
-      })
-      .addCase(googleLoginCallback.fulfilled, (state, action) =>
-        {
-          state.authLoading = false;
-          state.isAuthenticated = true;
-          state.user = action.payload;
-        }
-      )
-      .addCase(googleLoginCallback.rejected, (state, action) => {
-        state.authLoading = false;
-        state.error = action.payload;
-      })
+      
       // Update User Details
       .addCase(updateUserDetails.pending, (state) =>
         {
