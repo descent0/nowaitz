@@ -30,6 +30,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     let errorTimer, messageTimer;
+    console.log("user in login",user);
     if (error) {
       setReduxErrorVisible(true);
       errorTimer = setTimeout(() => setReduxErrorVisible(false), 5000);

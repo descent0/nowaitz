@@ -166,28 +166,33 @@ export const resetPassword = createAsyncThunk(
   }
 });
 
+
+const initialState = {
+  user: null,
+  users: [],
+  totalUsers: 0,
+  isAuthenticated: false,
+  authLoading: false,
+  otpLoading: false,
+  error: null,
+  message: '',
+  otpSent: false,
+  emailVerified: false,
+};
+
+
 // Auth Slice
 const authUserSlice = createSlice({
   name: 'authUser',
-  initialState: {
-    user: null,
-    users: [],
-    totalUsers: 0,      // <-- add this line
-    isAuthenticated: false,
-    authLoading: false,
-    otpLoading: false,
-    error: null,
-    message: '',
-    otpSent: false,
-    emailVerified: false,
-  },
+  initialState,
   reducers: {
-    resetState: (state) => {
-      state.error = null;
-      state.message = '';
-      state.otpSent = false;
-      state.emailVerified = false;
-    },
+   resetState: (state) => {
+  state.user = null;
+  state.isAuthenticated = false;
+  state.loading = false;
+  state.error = null;
+}
+
   },
   extraReducers: (builder) => {
     builder

@@ -58,7 +58,6 @@ const TeamMemberCard = ({ member }) => (
 );
 
 const Shop = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const sectionsRef = useRef({});
   const { shop: shopID } = useParams();
   const dispatch = useDispatch();

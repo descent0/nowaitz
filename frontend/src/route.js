@@ -36,30 +36,23 @@ import PendingRequest from "./Components/ServiceMan/PendingRequest";
 import ResetPassword from "./Components/Authentication/ResetPassword";
 
 
-// ✅ 1. Global Auth Checker — runs only once here
 const GlobalAuthLoader = ({ children }) => {
   const dispatch = useDispatch();
   const { isAuthenticated, loading, user } = useSelector((state) => state.authUser);
   const { isShopRegistered } = useSelector((state) => state.shop);
 
   useEffect(() => {
-    dispatch(checkAuthStatus());
+    dispatch(checkAuthStatus()); 
     dispatch(checkShop());
-
-    // Optional: periodic check for token expiry
-    const interval = setInterval(() => {
-      dispatch(checkAuthStatus());
-    }, 5 * 60 * 1000); // every 5 minutes
-
-    return () => clearInterval(interval);
   }, [dispatch]);
 
   if (loading) return <Loading />;
-
   return children;
 };
 
-// ✅ 2. Guards
+
+
+
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useSelector((state) => state.authUser);
 

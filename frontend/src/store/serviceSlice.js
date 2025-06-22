@@ -41,7 +41,7 @@ export const getServicesByShopId = createAsyncThunk(
   "services/getServicesByShopId",
   async (shopId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://localhost:5002/api/serv/services/shop/${shopId}`,{
+      const response = await axios.get(`${apiUrl}/services/shop/${shopId}`,{
          headers: {
           "Content-Type": "application/json",
         },

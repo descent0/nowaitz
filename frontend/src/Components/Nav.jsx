@@ -16,18 +16,26 @@ const Nav = () => {
   const menuRef = useRef(null);
   const profileRef = useRef(null);
 
+  
+useEffect(() => {
+  console.log("User after logout:", user); 
+ 
+},[user]);
+
+  
+
   const handleUserLogout = async (e) => {
-    e.preventDefault();
-    try {
-      dispatch(logoutUser());
-      setTimeout(()=>{
-        dispatch(resetState);
-navigate("/login", { replace: true })
-      }, 1000);
-    } catch (error) {
-      console.log("Error calling server:", error);
-    }
-  };
+  e.preventDefault();
+  try {
+    await dispatch(logoutUser()); 
+    dispatch(resetState());  
+    console.log(user);    
+    console.log("Logout successful. User state reset.");
+  } catch (error) {
+    console.log("Error calling server:", error);
+  }
+};
+
 
   const handleClickOutside = (e) => {
     if (
