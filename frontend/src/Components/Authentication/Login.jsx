@@ -104,9 +104,17 @@ const handleGoogleLogin = () => {
   }, [user, navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center px-4">
+    <div 
+      className="min-h-screen flex items-center justify-center md:justify-end md:pr-28 px-4"
+      style={{
+        backgroundImage: `url('/images/Your paragraph text.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       <motion.div
-        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg"
+        className={`bg-white p-4 px-8 rounded-lg shadow-2xl w-full max-w-lg ${userType !== 'user'? 'pb-10':''}`}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
@@ -191,7 +199,7 @@ const handleGoogleLogin = () => {
 
           <motion.button
             type="submit"
-            className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 "
             whileHover={{ scale: 1.05 }}
           >
             Sign In

@@ -129,8 +129,15 @@ const UserRegistrationPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center px-4 py-8">
-      <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-4xl">
+    <div 
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{
+        backgroundImage: `url('/images/Your paragraph text (2).png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >  <div className="bg-white p-6 md:p-8 rounded-lg shadow-2xl w-full max-w-4xl">
         <div className="flex flex-col items-center mb-6">
           <img src="logo.png" alt="Logo" className="w-16 h-16 mb-2" />
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Create an Account</h1>
