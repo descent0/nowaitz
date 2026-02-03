@@ -25,6 +25,8 @@ const Services = () => {
   const shopId = shopData?._id;
 
   const services = useSelector((state) => state.services.services);
+  const loading = useSelector((state) => state.services.loading);
+  const error = useSelector((state) => state.services.error);
 
   useEffect(() => {
     dispatch(checkShop());
