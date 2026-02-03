@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { forgotPassword, loginUser } from './../../store/userSlice';
+import { forgotPassword, loginUser, checkAuthStatus } from './../../store/userSlice';
 import { motion } from 'framer-motion';
 
 const LoginPage = () => {
@@ -76,10 +76,32 @@ const handleGoogleLogin = () => {
     "width=500,height=600"
   );
 
+  // Listen for message from popup
+  const handleMessage = (event) => {
+    // Verify the origin matches your backend
+    if (event.origin !== process.env.REACT_APP_BACKEND_API) {
+      return;
+    }
+
+    if (event.data.success) {
+      // Clear the listener
+      window.removeEventListener('message', handleMessage);
+      // Redirect or refresh to update auth state
+      dispatch(checkAuthStatus()).then(() => {
+        navigate('/');
+      });
+    }
+  };
+
+  window.addEventListener('message', handleMessage);
+
+  // Fallback: Check if popup closed
   const interval = setInterval(() => {
     if (popup?.closed) {
       clearInterval(interval);
-      window.location.reload(); 
+      window.removeEventListener('message', handleMessage);
+      // Check auth status in case user completed login
+      dispatch(checkAuthStatus());
     }
   }, 500);
 };
