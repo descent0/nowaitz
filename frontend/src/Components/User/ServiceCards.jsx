@@ -1,4 +1,4 @@
-import React from 'react';
+// ServiceCards component
 
 const ServiceCards = ({ title, description, imageLink }) => {
   return (

@@ -1,4 +1,4 @@
-import React from 'react'
+// HomeShop component
 import { Outlet } from 'react-router-dom';
 
 const HomeShop = () => {

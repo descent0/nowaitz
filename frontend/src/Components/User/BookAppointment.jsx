@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import DateSlider from "../utilComp/DateSlider";
@@ -6,7 +6,6 @@ import EmployeeSlider from "../utilComp/EmployeeSlider";
 import ServiceSlider from "../utilComp/ServiceSlider";
 import {
   fetchScheduleByDateAndEmployee,
-  updateSchedule,
 } from "../../store/scheduleSlice";
 import { getAllShopByShopId } from "../../store/shopSlice";
 import { getEmployeesByShopId } from "../../store/employeeSlice";

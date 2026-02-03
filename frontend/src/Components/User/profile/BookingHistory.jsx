@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAppointmentsByUserId, sendRequest } from "../../../store/appointmentSlice";
 import { useNavigate } from "react-router-dom";

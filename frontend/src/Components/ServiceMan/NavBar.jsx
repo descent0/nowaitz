@@ -1,4 +1,4 @@
-import React from 'react';
+// NavBar component
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {

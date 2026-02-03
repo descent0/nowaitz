@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ServiceCards from "./ServiceCards";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,7 @@ const ServiceType = () => {
     "Need help? We’ll connect you to the right people",
     "Find local services you can trust.",
   ];
+  
   useEffect(() => {
     let index = 0;
     const interval = setInterval(() => {
@@ -30,9 +31,8 @@ const ServiceType = () => {
 
     return () =>{ 
       clearInterval(interval);
-
     };
-  }, []);
+  }, [messages]);
 
   const filteredServices = service.filter((item) => {
     const matchesSearch =

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkShop } from '../../store/shopSlice';
 import {
@@ -25,8 +25,6 @@ const Services = () => {
   const shopId = shopData?._id;
 
   const services = useSelector((state) => state.services.services);
-  const loading = useSelector((state) => state.services.loading);
-  const error = useSelector((state) => state.services.error);
 
   useEffect(() => {
     dispatch(checkShop());

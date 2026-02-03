@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { registerShop } from '../../store/shopSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';

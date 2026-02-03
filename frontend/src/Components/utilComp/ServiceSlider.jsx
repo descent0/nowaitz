@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 
 const ServiceSlider = ({ services, selectedService, setSelectedService }) => {
   const scrollRef = useRef(null);

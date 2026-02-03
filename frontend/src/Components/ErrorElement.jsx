@@ -1,4 +1,4 @@
-import React from "react";
+// ErrorElement component
 import { useRouteError } from "react-router-dom";
 
 const ErrorElement = () => {

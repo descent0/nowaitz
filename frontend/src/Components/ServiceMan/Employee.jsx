@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createEmployee, deleteEmployee, getEmployees, getEmployeesByShopId, updateEmployee } from '../../store/employeeSlice';
+import { createEmployee, deleteEmployee, getEmployeesByShopId, updateEmployee } from '../../store/employeeSlice';
 import { checkShop } from '../../store/shopSlice';
 
 const Employee = () => {
@@ -25,7 +25,6 @@ const Employee = () => {
 
   const employees = useSelector((state) => state.employee.employees);
   const loading = useSelector((state) => state.employee.loading);
-  const error = useSelector((state) => state.employee.error);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

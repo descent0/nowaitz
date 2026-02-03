@@ -1,4 +1,4 @@
-import React from 'react';
+// DateSlider component
 
 const DateSlider = ({ selectedDate, setSelectedDate }) => {
   const scrollRef = React.useRef(null);

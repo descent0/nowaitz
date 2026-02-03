@@ -1,4 +1,4 @@
-import {useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { 
  MapPin, Phone, Instagram, Facebook, Star, 
   Mail, Calendar 

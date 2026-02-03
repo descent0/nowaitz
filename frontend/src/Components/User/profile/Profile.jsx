@@ -1,4 +1,3 @@
-import React from 'react';
 import PersonalDetails from './plD';
 import BookingHistory from './BookingHistory';
 import { useSelector } from 'react-redux';

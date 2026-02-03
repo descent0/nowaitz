@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAppointmentsByShopId, updateAppointmentStatus } from '../../store/appointmentSlice';
 import { checkShop } from '../../store/shopSlice';
@@ -8,8 +8,6 @@ const Appointments = () => {
   const shop = useSelector((state) => state.shop.shop);
   const shopId = shop?._id;
   const appointments = useSelector((state) => state.appointments.appointments);
-  const loading = useSelector((state) => state.appointments.loading);
-  const error = useSelector((state) => state.appointments.error);
 
   const [view, setView] = useState('upcoming'); // State to toggle between views
 
