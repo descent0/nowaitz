@@ -51,7 +51,7 @@ userRouter.get('/google/callback',
 `);
     } catch (err) {
       console.error(err);
-      return res.redirect('${process.env.REACT_FRONTEND_API}/login?error=oauth');
+      return res.redirect(`${process.env.REACT_FRONTEND_API}/login?error=oauth`);
     }
   }
 );

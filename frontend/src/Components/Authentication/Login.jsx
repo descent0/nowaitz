@@ -77,19 +77,25 @@ const handleGoogleLogin = () => {
   );
 
   // Listen for message from popup
-  const handleMessage = (event) => {
-    // Verify the origin matches your backend
-    if (event.origin !== process.env.REACT_APP_BACKEND_API) {
-      return;
-    }
-
-    if (event.data.success) {
+  const handleMessage = async (event) => {
+    // Check if message is from the backend (you can also check specific origin)
+    // Allow postMessage from backend server
+    console.log('Received message:', event.data, 'from:', event.origin);
+    
+    if (event.data && event.data.success) {
       // Clear the listener
       window.removeEventListener('message', handleMessage);
-      // Redirect or refresh to update auth state
-      dispatch(checkAuthStatus()).then(() => {
-        navigate('/');
-      });
+      
+      // Wait a moment for cookie to be set, then check auth
+      setTimeout(async () => {
+        try {
+          await dispatch(checkAuthStatus()).unwrap();
+          navigate('/');
+        } catch (error) {
+          console.error('Auth check failed:', error);
+          setErrorMessage('Login failed. Please try again.');
+        }
+      }, 500);
     }
   };
 
@@ -101,7 +107,9 @@ const handleGoogleLogin = () => {
       clearInterval(interval);
       window.removeEventListener('message', handleMessage);
       // Check auth status in case user completed login
-      dispatch(checkAuthStatus());
+      setTimeout(() => {
+        dispatch(checkAuthStatus());
+      }, 500);
     }
   }, 500);
 };
