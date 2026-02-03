@@ -37,13 +37,22 @@ userRouter.get('/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: '/login' }),
   async (req, res) => {
     try {
-      await generateToken(req.user._id, "user", res);
+      const token = await generateToken(req.user._id, "user", res);
 
      res.send(`
   <html>
     <body>
       <script>
-        window.opener.postMessage({ success: true }, "${process.env.REACT_FRONTEND_API}");
+        window.opener.postMessage({ 
+          success: true, 
+          token: "${token}",
+          user: ${JSON.stringify({ 
+            _id: req.user._id, 
+            name: req.user.name, 
+            email: req.user.email,
+            role: req.user.role 
+          })}
+        }, "${process.env.REACT_FRONTEND_API}");
         window.close();
       </script>
     </body>

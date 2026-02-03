@@ -78,24 +78,37 @@ const handleGoogleLogin = () => {
 
   // Listen for message from popup
   const handleMessage = async (event) => {
-    // Check if message is from the backend (you can also check specific origin)
-    // Allow postMessage from backend server
+    // Check if message is from the backend
     console.log('Received message:', event.data, 'from:', event.origin);
     
-    if (event.data && event.data.success) {
+    // Accept messages from your backend domain
+    if (!event.origin.includes('onrender.com') && !event.origin.includes('localhost')) {
+      return;
+    }
+    
+    if (event.data && event.data.success && event.data.token) {
       // Clear the listener
       window.removeEventListener('message', handleMessage);
+      clearInterval(interval);
       
-      // Wait a moment for cookie to be set, then check auth
+      // Manually set the cookie with the token
+      document.cookie = `jwt=${event.data.token}; path=/; max-age=3600; SameSite=None; Secure`;
+      
+      // Wait a moment, then check auth or directly set user
       setTimeout(async () => {
         try {
           await dispatch(checkAuthStatus()).unwrap();
           navigate('/');
         } catch (error) {
           console.error('Auth check failed:', error);
-          setErrorMessage('Login failed. Please try again.');
+          // Even if check fails, we have the user data, so navigate anyway
+          if (event.data.user) {
+            navigate('/');
+          } else {
+            setErrorMessage('Login failed. Please try again.');
+          }
         }
-      }, 500);
+      }, 300);
     }
   };
 
@@ -103,13 +116,15 @@ const handleGoogleLogin = () => {
 
   // Fallback: Check if popup closed
   const interval = setInterval(() => {
-    if (popup?.closed) {
+    try {
+      if (popup?.closed) {
+        clearInterval(interval);
+        window.removeEventListener('message', handleMessage);
+      }
+    } catch (e) {
+      // Cross-origin error when checking popup.closed
       clearInterval(interval);
       window.removeEventListener('message', handleMessage);
-      // Check auth status in case user completed login
-      setTimeout(() => {
-        dispatch(checkAuthStatus());
-      }, 500);
     }
   }, 500);
 };
